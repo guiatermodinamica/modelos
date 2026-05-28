@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modelos baseados em gᴱ · Termodinâmica II</title>
+<title>Seleção de Modelos · Termodinâmica II</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream:    #faf7f2;
@@ -14,24 +14,13 @@
     --ink:      #2d2620;
     --ink-soft: #6b5e54;
     --line:     #d4c5b5;
-
-    --c-margules:  #c9a0a0; /* dusty rose */
-    --c-vanlaar:   #a0b8c9; /* slate blue */
-    --c-wilson:    #a0c9b0; /* sage green */
-    --c-nrtl:      #c9b8a0; /* warm sand */
-    --c-uniquac:   #b8a0c9; /* muted lavender */
-    --c-unifac:    #c9c0a0; /* golden straw */
-
-    --c-margules-d:  #8c5e5e;
-    --c-vanlaar-d:   #4a7a8c;
-    --c-wilson-d:    #3d7a5a;
-    --c-nrtl-d:      #8c7050;
-    --c-uniquac-d:   #6b4a8c;
-    --c-unifac-d:    #7a6e3d;
+    
+    /* Cor unificada para os modelos finais */
+    --c-model-accent: #8c5e5e; 
+    --c-model-hover:  #7a5252;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { font-size: 16px; scroll-behavior: smooth; }
 
   body {
@@ -40,9 +29,10 @@
     color: var(--ink);
     min-height: 100vh;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
-  
   body::before {
     content: '';
     position: fixed;
@@ -53,373 +43,140 @@
     z-index: 0;
   }
 
-  /* ── Header ── */
-  header {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 3rem 1.5rem 1rem;
+  header { position: relative; z-index: 1; text-align: center; padding: 3rem 1.5rem 1rem; }
+  .header-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.6rem; }
+  .header-title { font-family: 'Amiri', serif; font-weight: 400; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.15; color: var(--ink); }
+  .header-sub { font-size: 0.9rem; color: var(--ink-soft); margin-top: 0.8rem; }
+  .header-rule { width: 48px; height: 1px; background: var(--line); margin: 1.2rem auto 0; }
+
+  #tree-container {
+    position: relative; z-index: 1; width: 100%; max-width: 800px;
+    margin: 2rem auto; padding: 0 1.5rem; flex-grow: 1;
+    display: flex; flex-direction: column; align-items: center;
   }
 
-  .header-eyebrow {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.6rem;
+  .tree-node {
+    display: flex; flex-direction: column; align-items: center; width: 100%;
+    opacity: 0; transform: translateY(20px);
+    animation: nodeEnter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 
-  .header-title {
-    font-family: 'Amiri', 'Atteron', serif;
-    font-weight: 400;
-    font-size: clamp(2.2rem, 5vw, 3.6rem);
-    line-height: 1.15;
-    color: var(--ink);
-    letter-spacing: -0.01em;
+  .tree-node + .tree-node::before {
+    content: ''; width: 2px; height: 40px; background-color: var(--line); margin: 15px 0;
   }
 
-  .header-title em {
-    font-style: italic;
-    font-weight: 400;
+  @keyframes nodeEnter { to { opacity: 1; transform: translateY(0); } }
+
+  .question-box {
+    background: var(--cream2); border: 1px solid var(--line); padding: 1.5rem 2rem;
+    border-radius: 8px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    margin-bottom: 1.5rem; max-width: 500px; width: 100%;
   }
 
-  .header-sub {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-    margin-top: 0.5rem;
-    font-weight: 400;
+  .question-text { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--ink); line-height: 1.3; }
+
+  /* Estilos para a Dica (Hint) */
+  .hint-toggle {
+    background: none; border: none; color: var(--ink-soft); font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em;
+    cursor: pointer; margin-top: 1rem; display: inline-flex; align-items: center; gap: 6px;
+    transition: color 0.2s ease;
+  }
+  .hint-toggle:hover { color: var(--ink); }
+  .hint-content {
+    display: none; margin-top: 1rem; padding: 1rem; background: rgba(107, 94, 84, 0.08);
+    border-left: 2px solid var(--ink-soft); border-radius: 0 4px 4px 0;
+    font-size: 0.85rem; color: var(--ink); line-height: 1.6; text-align: left;
+  }
+  .hint-content.show { display: block; animation: fadeIn 0.3s ease; }
+
+  .options-row { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .decision-btn {
+    background: var(--cream); color: var(--ink-soft); border: 1px solid var(--line);
+    padding: 0.8rem 1.8rem; border-radius: 30px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease;
+  }
+  .decision-btn:hover { background: var(--cream2); color: var(--ink); border-color: var(--ink-soft); }
+  .decision-btn.selected { background: var(--ink); color: var(--cream); border-color: var(--ink); box-shadow: 0 4px 10px rgba(45, 38, 32, 0.2); }
+  .decision-btn.dimmed { opacity: 0.5; pointer-events: none; }
+
+  .result-box { text-align: center; margin-top: 1rem; width: 100%; }
+  .result-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-soft); margin-bottom: 1.5rem; }
+  .models-grid { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+  .model-card-active {
+    background: var(--c-model-accent); color: var(--cream); border: none; padding: 1.2rem 2.5rem;
+    border-radius: 8px; font-family: 'Amiri', serif; font-size: 1.4rem; cursor: pointer;
+    box-shadow: 0 6px 15px rgba(140, 94, 94, 0.3); transition: transform 0.2s, background 0.2s;
+  }
+  .model-card-active:hover { background: var(--c-model-hover); transform: translateY(-3px); }
+
+  .model-card-inactive {
+    background: transparent; color: var(--ink-soft); border: 1px dashed var(--line);
+    padding: 1rem 2rem; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
   }
 
-  .header-rule {
-    width: 48px;
-    height: 1px;
-    background: var(--line);
-    margin: 1.2rem auto 0;
-  }
+  .reset-btn { margin-top: 3rem; background: transparent; border: none; color: var(--ink-soft); font-size: 0.85rem; text-decoration: underline; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
-  /* ── Map canvas ── */
-  #map-section {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 0;
-    aspect-ratio: 1 / 0.92;
-  }
-
-  #map-svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-
-  /* ── Nodes ── */
-  .node-group { cursor: pointer; }
-
-  .node-circle {
-    transition: r 0.25s cubic-bezier(.34,1.56,.64,1), filter 0.25s ease;
-    filter: drop-shadow(0 2px 6px rgba(44,32,20,0.10));
-  }
-
-  .node-group:hover .node-circle {
-    r: 52;
-    filter: drop-shadow(0 4px 14px rgba(44,32,20,0.18));
-  }
-
-  .node-group.active .node-circle {
-    r: 52;
-    filter: drop-shadow(0 4px 16px rgba(44,32,20,0.22));
-  }
-
-  .node-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    fill: white;
-    text-anchor: middle;
-    dominant-baseline: central;
-    pointer-events: none;
-    letter-spacing: 0.03em;
-  }
-
-  .center-circle {
-    fill: var(--ink);
-    filter: drop-shadow(0 4px 18px rgba(44,32,20,0.18));
-  }
-
-  .center-label-1 {
-    font-family: 'Amiri', 'Atteron', serif;
-    font-size: 16px;
-    font-weight: 400;
-    font-style: italic;
-    fill: var(--cream);
-    text-anchor: middle;
-    dominant-baseline: central;
-    pointer-events: none;
-  }
-  .center-label-2 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 300;
-    fill: var(--cream2);
-    text-anchor: middle;
-    dominant-baseline: central;
-    pointer-events: none;
-    letter-spacing: 0.08em;
-  }
-
-  .spoke {
-    stroke: var(--line);
-    stroke-width: 1;
-    fill: none;
-    stroke-dasharray: 3 4;
-  }
-
-  /* ── Detail panel ── */
-  #panel-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(45,38,32,0.35);
-    backdrop-filter: blur(4px);
-    z-index: 100;
-    animation: fadeIn 0.2s ease;
-  }
-
+  /* ── Painel Lateral ── */
+  #panel-backdrop { display: none; position: fixed; inset: 0; background: rgba(45,38,32,0.35); backdrop-filter: blur(4px); z-index: 100; animation: fadeIn 0.2s ease; }
   #panel-backdrop.visible { display: block; }
-
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   #detail-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(700px, 100vw); /* Aumentado de 520px para 700px */
-  background: var(--cream);
-  z-index: 101;
-  overflow-y: auto;
-  box-shadow: -6px 0 40px rgba(44,32,20,0.14);
-  transform: translateX(100%);
-  transition: transform 0.35s cubic-bezier(.22,1,.36,1);
-  display: flex;
-  flex-direction: column;
-}
-
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(700px, 100vw); background: var(--cream);
+    z-index: 101; overflow-y: auto; box-shadow: -6px 0 40px rgba(44,32,20,0.14);
+    transform: translateX(100%); transition: transform 0.35s cubic-bezier(.22,1,.36,1);
+    display: flex; flex-direction: column;
+  }
   #detail-panel.open { transform: translateX(0); }
 
-  .panel-header {
-    padding: 2.2rem 2.5rem 1.2rem;
-    border-bottom: 1px solid var(--line);
-    position: relative;
-  }
-
-  .panel-tag {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.4rem;
-  }
-
-  .panel-title {
-    font-family: 'Amiri', 'Atteron', serif;
-    font-size: 2.4rem;
-    font-weight: 700;
-    line-height: 1.1;
-    color: var(--ink);
-  }
-
+  .panel-header { padding: 2.2rem 2.5rem 1.2rem; border-bottom: 1px solid var(--line); position: relative; }
+  .panel-tag { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.4rem; }
+  .panel-title { font-family: 'Amiri', serif; font-size: 2.4rem; font-weight: 700; line-height: 1.1; color: var(--ink); }
   .panel-pill {
-    display: inline-block;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-top: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
+    display: inline-block; font-family: 'DM Sans', sans-serif; font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; margin-top: 0.8rem; font-weight: 500; letter-spacing: 0.05em;
+    background: rgba(140, 94, 94, 0.15); color: var(--c-model-accent); border: 1px solid var(--c-model-accent);
   }
-
-  #close-btn {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--line);
-    background: transparent;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--ink-soft);
-    font-size: 14px;
-    transition: background 0.15s, color 0.15s;
-  }
+  
+  #close-btn { position: absolute; top: 1.5rem; right: 1.5rem; width: 32px; height: 32px; border: 1px solid var(--line); background: transparent; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 14px; transition: background 0.15s, color 0.15s; }
   #close-btn:hover { background: var(--cream2); color: var(--ink); }
 
   .panel-body { padding: 1.6rem 2.5rem 2.5rem; }
-
-  /* Tab navigation */
-  .tab-nav {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 1.8rem;
-}
-
-  .tab-btn {
-    flex-shrink: 0;
-    padding: 0.6rem 1.2rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-    margin-bottom: -1px;
-  }
+  .tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 1.8rem; }
+  .tab-btn { flex-shrink: 0; padding: 0.6rem 1.2rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.15s, border-color 0.15s; margin-bottom: -1px; }
   .tab-btn:hover { color: var(--ink); }
-  .tab-btn.active {
-    color: var(--ink);
-    border-bottom-color: var(--accent);
-    font-weight: 700;
-  }
-
+  .tab-btn.active { color: var(--ink); border-bottom-color: var(--c-model-accent); font-weight: 700; }
   .tab-content { display: none; }
   .tab-content.active { display: block; animation: fadeUp 0.2s ease; }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  .section-label { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.5rem; }
+  .eq-block { background: var(--cream2); border-left: 3px solid var(--c-model-accent); border-radius: 0 6px 6px 0; padding: 1rem 1.2rem; margin: 0.5rem 0 1.5rem; font-family: 'Amiri', serif; font-size: 1.35rem; line-height: 1.6; color: var(--ink); overflow-x: auto; }
+  .eq-block sub, .eq-block sup { font-size: 0.7em; }
+  .eq-block i { font-family: 'Amiri', serif; font-style: italic; }
+  .content-text { font-family: 'DM Sans', sans-serif; font-size: 0.95rem; line-height: 1.7; color: var(--ink); }
+  .content-text ul { padding-left: 1.2rem; margin-top: 0.5rem; }
+  .content-text li { margin-bottom: 0.8rem; }
+  .content-text li::marker { color: var(--c-model-accent); font-size: 0.9em; }
+  .ref-note { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--ink-soft); margin-top: -0.5rem; margin-bottom: 1.5rem; font-style: italic; }
 
-  /* Content typography */
-  .section-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.5rem;
-  }
+  footer { position: relative; z-index: 1; text-align: center; padding: 2rem 1.5rem 2.5rem; border-top: 1px solid var(--line); margin-top: 2rem; }
+  .footer-refs { font-size: 0.75rem; color: var(--ink-soft); line-height: 1.7; max-width: 600px; margin: 0 auto; }
+  .footer-refs strong { font-weight: 500; color: var(--ink); }
+  .footer-sig { font-family: 'Amiri', serif; font-size: 1rem; font-style: italic; color: var(--ink-soft); margin-top: 1.2rem; }
+  .linkedin-link { color: var(--ink-soft) !important; text-decoration: none !important; border-bottom: 1px solid var(--line); transition: color 0.2s ease, border-color 0.2s ease; }
+  .linkedin-link:hover { color: var(--ink) !important; border-bottom-color: var(--ink); }
 
-
-  .eq-block {
-    background: var(--cream2);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 6px 6px 0;
-    padding: 1rem 1.2rem;
-    margin: 0.5rem 0 1.5rem;
-    font-family: 'Amiri', 'Atteron', serif;
-    font-size: 1.35rem;
-    line-height: 1.6;
-    color: var(--ink);
-    overflow-x: auto;
-  }
-
-  .eq-block sub, .eq-block sup {
-    font-size: 0.7em;
-  }
-
-  .eq-block i {
-    font-family: 'Amiri', 'Atteron', serif;
-    font-style: italic;
-  }
-
-  .content-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem; 
-    line-height: 1.7;
-    color: var(--ink);
-  }
-
-  .content-text ul {
-    padding-left: 1.2rem;
-    margin-top: 0.5rem;
-  }
-
-  .content-text li {
-    margin-bottom: 0.8rem; 
-  }
-
-  .content-text li::marker {
-    color: var(--accent);
-    font-size: 0.9em;
-  }
-
-  .ref-note {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    color: var(--ink-soft);
-    margin-top: -0.5rem;
-    margin-bottom: 1.5rem;
-    font-style: italic;
-  }
-
-  /* ── Footer ── */
-  footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 2rem 1.5rem 2.5rem;
-    border-top: 1px solid var(--line);
-    margin-top: 2rem;
-  }
-
-  .footer-refs {
-    font-size: 0.75rem;
-    color: var(--ink-soft);
-    line-height: 1.7;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .footer-refs strong {
-    font-weight: 500;
-    color: var(--ink);
-  }
-
-  .footer-sig {
-    font-family: 'Amiri', 'Atteron', serif;
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--ink-soft);
-    margin-top: 1.2rem;
-    footer a {
-  color: var(--ink-soft); 
-  text-decoration: none;
-  border-bottom: 1px solid var(--line); 
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-footer a:hover {
-  color: var(--ink); 
-  border-bottom-color: var(--ink);
-}
-  }
-
-  /* ── Mobile ── */
   @media (max-width: 600px) {
-    #map-section { aspect-ratio: auto; min-height: 70vw; padding-bottom: 1rem; }
     .panel-title { font-size: 2rem; }
     .panel-body { padding: 1.5rem 1.5rem 2rem; }
     .panel-header { padding: 1.8rem 1.5rem 1rem; }
     .eq-block { font-size: 1.15rem; }
     .tab-nav { flex-wrap: wrap; }
+    .question-text { font-size: 1.2rem; }
+    .decision-btn { width: 100%; text-align: center; }
+    .model-card-active { width: 100%; text-align: center; }
   }
 </style>
 </head>
@@ -427,65 +184,14 @@ footer a:hover {
 
 <header>
   <p class="header-eyebrow">· Termodinâmica II ·</p>
-  <h1 class="header-title">Modelos baseados em <em>g<sup>E</sup></em></h1>
-  <p class="header-sub">Energia de Gibbs em excesso &amp; Coeficiente de atividade</p>
+  <h1 class="header-title">Seleção de Modelos</h1>
+  <p class="header-sub">Guia interativo para escolha de modelos de equilíbrio de fases</p>
   <div class="header-rule"></div>
 </header>
 
-<section id="map-section">
-  <svg id="map-svg" viewBox="0 0 500 460" preserveAspectRatio="xMidYMid meet">
-    <defs>
-      <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <circle cx="250" cy="230" r="155" fill="none" stroke="#d4c5b5" stroke-width="0.5" stroke-dasharray="2 6" opacity="0.6"/>
-    <circle cx="250" cy="230" r="170" fill="none" stroke="#d4c5b5" stroke-width="0.3" stroke-dasharray="1 10" opacity="0.4"/>
-
-    <line class="spoke" id="spoke-margules"  x1="250" y1="155" x2="174" y2="97"/>
-    <line class="spoke" id="spoke-vanlaar"   x1="250" y1="155" x2="326" y2="97"/>
-    <line class="spoke" id="spoke-wilson"    x1="250" y1="230" x2="405" y2="230"/>
-    <line class="spoke" id="spoke-nrtl"      x1="250" y1="305" x2="326" y2="363"/>
-    <line class="spoke" id="spoke-uniquac"   x1="250" y1="305" x2="174" y2="363"/>
-    <line class="spoke" id="spoke-unifac"    x1="250" y1="230" x2="95"  y2="230"/>
-
-    <circle class="center-circle" cx="250" cy="230" r="68"/>
-    <text class="center-label-1" x="250" y="218">modelos</text>
-    <text class="center-label-2" x="250" y="233">baseados em</text>
-    <text class="center-label-1" x="250" y="248">g ᴱ</text>
-
-    <g class="node-group" data-model="margules" transform="translate(152,75)">
-      <circle class="node-circle" cx="0" cy="0" r="46" fill="#c9a0a0"/>
-      <text class="node-label" x="0" y="0">Margules</text>
-    </g>
-    <g class="node-group" data-model="vanlaar" transform="translate(348,75)">
-      <circle class="node-circle" cx="0" cy="0" r="46" fill="#a0b8c9"/>
-      <text class="node-label" x="0" y="-6">van</text>
-      <text class="node-label" x="0" y="8">Laar</text>
-    </g>
-    <g class="node-group" data-model="wilson" transform="translate(418,230)">
-      <circle class="node-circle" cx="0" cy="0" r="46" fill="#a0c9b0"/>
-      <text class="node-label" x="0" y="0">Wilson</text>
-    </g>
-    <g class="node-group" data-model="nrtl" transform="translate(348,385)">
-      <circle class="node-circle" cx="0" cy="0" r="46" fill="#c9b8a0"/>
-      <text class="node-label" x="0" y="0">NRTL</text>
-    </g>
-    <g class="node-group" data-model="uniquac" transform="translate(152,385)">
-      <circle class="node-circle" cx="0" cy="0" r="46" fill="#b8a0c9"/>
-      <text class="node-label" x="0" y="0">UNIQUAC</text>
-    </g>
-    <g class="node-group" data-model="unifac" transform="translate(82,230)">
-      <circle class="node-circle" cx="0" cy="0" r="46" fill="#c9c0a0"/>
-      <text class="node-label" x="0" y="0">UNIFAC</text>
-    </g>
-  </svg>
-</section>
+<main id="tree-container"></main>
 
 <div id="panel-backdrop"></div>
-
 <div id="detail-panel" role="dialog" aria-modal="true" aria-label="Detalhes do modelo">
   <div class="panel-header">
     <p class="panel-tag">Modelo termodinâmico</p>
@@ -502,254 +208,288 @@ footer a:hover {
 <footer>
   <div class="footer-refs">
     <strong>Referências</strong><br>
+    Bonetto, L. R. <em>Termodinâmica II: Cap. 3 - Equilíbrio de Fases (Seleção de Modelos)</em>, IFSul, 2026. &nbsp;·&nbsp;
     Koretsky, M. D. <em>Engineering and Chemical Thermodynamics</em>, 2ª ed., Wiley, 2013. &nbsp;·&nbsp;
-    Prausnitz, J. M.; Lichtenthaler, R. N.; Azevedo, E. G. <em>Molecular Thermodynamics of Fluid-Phase Equilibria</em>, 3ª ed., Prentice Hall, 1999. &nbsp;·&nbsp;
-    Smith, J. M.; Van Ness, H. C.; Abbott, M. M. <em>Introduction to Chemical Engineering Thermodynamics</em>, 8ª ed., McGraw-Hill, 2018.
+    Prausnitz, J. M. et al. <em>Molecular Thermodynamics of Fluid-Phase Equilibria</em>, 3ª ed., Prentice Hall, 1999.
   </div>
-  <p class="footer-sig">Elaborado por Taili Lucas · 2026</p>
+  <p class="footer-sig">
+    Elaborado por <a href="LINK_DO_SEU_LINKEDIN" target="_blank" class="linkedin-link">Taili Lucas</a> · 2026
+  </p>
 </footer>
 
 <script>
-const MODELS = {
+// --- BANCO DE DADOS DA ÁRVORE DE DECISÃO ---
+const TREE_DATA = {
+  inicio: {
+    q: "Qual a polaridade predominante do sistema?",
+    hint: "<strong>Substâncias polares</strong> (ex: água, álcoois, cetonas) possuem distribuição assimétrica de carga e formam fortes interações, como pontes de hidrogênio. <strong>Apolares</strong> (ex: benzeno, metano) têm distribuição simétrica de carga e interações mais fracas.",
+    options: [
+      { label: "Apolar", next: "apolar" },
+      { label: "Polar", next: "eletr" }
+    ]
+  },
+  apolar: {
+    q: "Trata-se de substâncias reais?",
+    hint: "<strong>Pseudos</strong> (pseudocomponentes) são frações genéricas e hipotéticas muito utilizadas na indústria do petróleo, definidas por faixas de ebulição quando a composição química exata da mistura é desconhecida ou complexa demais.",
+    options: [
+      { label: "Sim", next: "apolar_sim" },
+      { label: "Não (Pseudos)", next: "end_pseudos" }
+    ]
+  },
+  apolar_sim: {
+    q: "A mistura é composta por gases leves?",
+    hint: "Gases leves (ex: hidrogênio, nitrogênio, metano) estão em temperaturas muito acima de suas temperaturas críticas na condição de processo. Eles não condensam facilmente e exigem tratamento especial na equação de estado.",
+    options: [
+      { label: "Sim", next: "end_psrk" },
+      { label: "Não", next: "end_ceos" }
+    ]
+  },
+  eletr: {
+    q: "Há presença de eletrólitos no sistema?",
+    hint: "Eletrólitos são substâncias (como sais, ácidos ou bases) que se dissociam total ou parcialmente em íons quando dissolvidas (ex: NaCl em água), gerando forças eletrostáticas de longo alcance que modelos gE tradicionais não conseguem prever.",
+    options: [
+      { label: "Sim", next: "end_eletr" },
+      { label: "Não", next: "pressao" }
+    ]
+  },
+  pressao: {
+    q: "O sistema opera em alta pressão?",
+    hint: "A fronteira de 'alta pressão' depende da substância, mas em termos práticos de engenharia, pressões onde a fase vapor passa a desviar significativamente do comportamento de gás ideal (frequentemente P > 10 a 15 bar) exigem o uso de Equações de Estado (CEoS).",
+    options: [
+      { label: "Sim", next: "end_alta_p" },
+      { label: "Não", next: "dados" }
+    ]
+  },
+  dados: {
+    q: "Há dados experimentais disponíveis para ajustar o modelo?",
+    hint: "Modelos correlativos (como Wilson e NRTL) exigem que você tenha dados de laboratório (ou parâmetros de interação binária já publicados na literatura) para 'calibrar' a equação. Se não houver, você precisará de um modelo preditivo (como UNIFAC).",
+    options: [
+      { label: "Sim", next: "lle_sim" },
+      { label: "Não", next: "lle_nao" }
+    ]
+  },
+  lle_sim: {
+    q: "Ocorrerá separação de fases líquidas (Equilíbrio LLE)?",
+    hint: "O <strong>Equilíbrio Líquido-Líquido (LLE)</strong> ocorre quando os componentes não são perfeitamente miscíveis e o sistema se divide em duas fases líquidas imiscíveis (como água e óleo). Alguns modelos matematicamente não suportam essa separação.",
+    options: [
+      { label: "Sim", next: "end_corr_lle" },
+      { label: "Não", next: "end_corr_vle" }
+    ]
+  },
+  lle_nao: {
+    q: "Ocorrerá separação de fases líquidas (Equilíbrio LLE)?",
+    hint: "O <strong>Equilíbrio Líquido-Líquido (LLE)</strong> ocorre quando os componentes formam duas ou mais fases líquidas imiscíveis. Modelos preditivos padrão (como UNIFAC) costumam superestimar ou falhar na previsão de LLE, exigindo versões modificadas.",
+    options: [
+      { label: "Sim", next: "end_pred_lle" },
+      { label: "Não", next: "end_pred_vle" }
+    ]
+  }
+};
+
+// --- BANCO DE DADOS DOS RESULTADOS FINAIS ---
+const RESULTS = {
+  end_pseudos: { title: "Modelos Sugeridos", models: [{ name: "CEoS, CEoS+SCMR+SH", isDetail: false }] },
+  end_psrk:    { title: "Modelos Sugeridos", models: [{ name: "PSRK, Lei de Henry", isDetail: false }] },
+  end_ceos:    { title: "Equações Cúbicas de Estado", models: [{ name: "Peng-Robinson (PR)", isDetail: false }, { name: "Soave-Redlich-Kwong (SRK)", isDetail: false }] },
+  end_eletr:   { title: "Modelos para Eletrólitos", models: [{ name: "eNRTL", isDetail: false }, { name: "Modelos de Pitzer", isDetail: false }] },
+  end_alta_p:  { title: "CEoS + Regras de Mistura + gᴱ", models: [{ name: "Regras SCMR, PSRK, MHV1", isDetail: false }] },
+  end_corr_lle:{ title: "Modelos Correlativos (VLE + LLE)", models: [{ name: "NRTL", key: "nrtl", isDetail: true }, { name: "UNIQUAC", key: "uniquac", isDetail: true }] },
+  end_corr_vle:{ title: "Modelos Correlativos (Apenas VLE)", models: [{ name: "Margules", key: "margules", isDetail: true }, { name: "van Laar", key: "vanlaar", isDetail: true }, { name: "Wilson", key: "wilson", isDetail: true }, { name: "NRTL", key: "nrtl", isDetail: true }, { name: "UNIQUAC", key: "uniquac", isDetail: true }] },
+  end_pred_lle:{ title: "Modelos Preditivos (LLE)", models: [{ name: "UNIFAC-LLE", isDetail: false }] },
+  end_pred_vle:{ title: "Modelos Preditivos (VLE)", models: [{ name: "UNIFAC", key: "unifac", isDetail: true }, { name: "F-SAC", isDetail: false }, { name: "COSMO-SAC", isDetail: false }] }
+};
+
+// --- DADOS PARA OS PAINÉIS LATERAIS ---
+const MODELS_DETAIL = {
   margules: {
-    name: "Margules",
-    pill: "Empírico",
-    color: "#c9a0a0",
-    colorDark: "#8c5e5e",
+    name: "Margules", pill: "Empírico · Correlativo",
     tabs: {
-      "Equações": `
-        <p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p>
-        <div class="eq-block">
-          <i>g</i><sup>E</sup> / <i>RT</i> = <i>x</i><sub>1</sub><i>x</i><sub>2</sub> (<i>A</i><sub>21</sub><i>x</i><sub>1</sub> + <i>A</i><sub>12</sub><i>x</i><sub>2</sub>)
-        </div>
-        <p class="section-label">Coeficientes de atividade (ln γᵢ)</p>
-        <div class="eq-block">
-          ln <i>γ</i><sub>1</sub> = <i>x</i><sub>2</sub><sup>2</sup> [<i>A</i><sub>12</sub> + 2(<i>A</i><sub>21</sub> − <i>A</i><sub>12</sub>)<i>x</i><sub>1</sub>]<br><br>
-          ln <i>γ</i><sub>2</sub> = <i>x</i><sub>1</sub><sup>2</sup> [<i>A</i><sub>21</sub> + 2(<i>A</i><sub>12</sub> − <i>A</i><sub>21</sub>)<i>x</i><sub>2</sub>]
-        </div>
-        <p class="ref-note">Caso simétrico (solução estritamente regular): A<sub>12</sub> = A<sub>21</sub> = A</p>`,
-      "Aplicação": `
-        <div class="content-text"><ul>
-          <li><strong>Misturas simples:</strong> Adequado para sistemas onde as moléculas possuem tamanhos, formas e naturezas químicas muito semelhantes (ex: benzeno e tolueno, misturas de hidrocarbonetos leves).</li>
-          <li><strong>Interpolações rápidas:</strong> Utilizado na modelagem inicial de dados de Equilíbrio Líquido-Vapor (VLE) quando o sistema apresenta desvios apenas moderados da idealidade.</li>
-        </ul></div>`,
-      "Características": `
-        <div class="content-text"><ul>
-          <li><strong>Base matemática:</strong> Consiste essencialmente no truncamento de uma expansão em série de potências da fração molar (conhecida como série de Redlich-Kister).</li>
-          <li><strong>Abordagem macroscópica:</strong> É um modelo puramente fenomenológico. Ele trata a mistura de forma global, não levando em consideração o arranjo molecular local ou interações específicas.</li>
-          <li><strong>Parâmetros:</strong> Seus parâmetros (<i>A</i><sub>12</sub> e <i>A</i><sub>21</sub>) são obtidos estritamente por regressão de dados experimentais.</li>
-        </ul></div>`,
-      "Limitações": `
-        <div class="content-text"><ul>
-          <li>Totalmente inadequado para prever o comportamento de misturas complexas ou fortemente associativas (ex: sistemas com ponte de hidrogênio como água e álcoois).</li>
-          <li>Falha severamente para moléculas assimétricas (com tamanhos muito discrepantes).</li>
-          <li>Não possui embasamento físico rigoroso que permita extrapolações seguras de temperatura.</li>
-          <li>Incapaz de prever Equilíbrio Líquido-Líquido (LLE) de forma confiável.</li>
-        </ul></div>`
+      "Equações": `<p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p><div class="eq-block"><i>g</i><sup>E</sup> / <i>RT</i> = <i>x</i><sub>1</sub><i>x</i><sub>2</sub> (<i>A</i><sub>21</sub><i>x</i><sub>1</sub> + <i>A</i><sub>12</sub><i>x</i><sub>2</sub>)</div><p class="section-label">Coeficientes de atividade (ln γᵢ)</p><div class="eq-block">ln <i>γ</i><sub>1</sub> = <i>x</i><sub>2</sub><sup>2</sup> [<i>A</i><sub>12</sub> + 2(<i>A</i><sub>21</sub> − <i>A</i><sub>12</sub>)<i>x</i><sub>1</sub>]<br><br>ln <i>γ</i><sub>2</sub> = <i>x</i><sub>1</sub><sup>2</sup> [<i>A</i><sub>21</sub> + 2(<i>A</i><sub>12</sub> − <i>A</i><sub>21</sub>)<i>x</i><sub>2</sub>]</div><p class="ref-note">Caso simétrico (solução estritamente regular): A<sub>12</sub> = A<sub>21</sub> = A</p>`,
+      "Aplicação": `<div class="content-text"><ul><li><strong>Misturas simples:</strong> Adequado para sistemas onde as moléculas possuem tamanhos, formas e naturezas químicas muito semelhantes.</li><li><strong>Interpolações rápidas:</strong> Utilizado na modelagem inicial de dados VLE quando o sistema apresenta desvios moderados da idealidade.</li></ul></div>`,
+      "Características": `<div class="content-text"><ul><li><strong>Base matemática:</strong> Consiste no truncamento de uma expansão em série de potências da fração molar (série de Redlich-Kister).</li><li><strong>Abordagem macroscópica:</strong> Modelo puramente empírico. Não considera o arranjo molecular local.</li></ul></div>`,
+      "Limitações": `<div class="content-text"><ul><li>Inadequado para misturas complexas ou fortemente associativas (ex: pontes de hidrogênio).</li><li>Falha severamente para moléculas assimétricas (tamanhos muito discrepantes).</li><li>Incapaz de prever Equilíbrio Líquido-Líquido (LLE) de forma confiável.</li></ul></div>`
     }
   },
   vanlaar: {
-    name: "van Laar",
-    pill: "Semi-teórico · 2 parâmetros",
-    color: "#a0b8c9",
-    colorDark: "#4a7a8c",
+    name: "van Laar", pill: "Semi-teórico · 2 parâmetros",
     tabs: {
-      "Equações": `
-        <p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p>
-        <div class="eq-block">
-          <i>g</i><sup>E</sup> / <i>RT</i> = (<i>A</i><sub>12</sub><i>A</i><sub>21</sub><i>x</i><sub>1</sub><i>x</i><sub>2</sub>) / (<i>A</i><sub>12</sub><i>x</i><sub>1</sub> + <i>A</i><sub>21</sub><i>x</i><sub>2</sub>)
-        </div>
-        <p class="section-label">Coeficientes de atividade (ln γᵢ)</p>
-        <div class="eq-block">
-          ln <i>γ</i><sub>1</sub> = <i>A</i><sub>12</sub> / [1 + (<i>A</i><sub>12</sub><i>x</i><sub>1</sub>)/(<i>A</i><sub>21</sub><i>x</i><sub>2</sub>)]<sup>2</sup><br><br>
-          ln <i>γ</i><sub>2</sub> = <i>A</i><sub>21</sub> / [1 + (<i>A</i><sub>21</sub><i>x</i><sub>2</sub>)/(<i>A</i><sub>12</sub><i>x</i><sub>1</sub>)]<sup>2</sup>
-        </div>`,
-      "Aplicação": `
-        <div class="content-text"><ul>
-          <li><strong>Desvios positivos:</strong> Funciona muito bem para sistemas que apresentam desvios positivos consistentes da Lei de Raoult.</li>
-          <li><strong>Assimetria de volatilidade:</strong> Uma excelente escolha quando as pressões de vapor dos componentes puros são muito diferentes.</li>
-          <li>Cálculos analíticos rápidos na determinação de azeótropos binários devido à simplicidade algébrica de sua forma racional.</li>
-        </ul></div>`,
-      "Características": `
-        <div class="content-text"><ul>
-          <li><strong>Origem física:</strong> É historicamente derivado da equação de estado de van der Waals para misturas.</li>
-          <li><strong>Frações volumétricas:</strong> Acomoda diferenças de tamanho molecular introduzindo o conceito empírico de "fração volumétrica efetiva", guiada pelas constantes da equação.</li>
-          <li>Mais flexível que o modelo de Margules para capturar assimetrias na curva de equilíbrio.</li>
-        </ul></div>`,
-      "Limitações": `
-        <div class="content-text"><ul>
-          <li><strong>Mistura aleatória:</strong> Parte da premissa de que a entropia de mistura é idêntica à de uma mistura ideal, o que é fisicamente falso para fluidos altamente polares.</li>
-          <li>Incapaz de representar matematicamente sistemas que apresentam máximos ou mínimos na curva de ln <i>γ</i> versus composição (comum em sistemas halogenados).</li>
-          <li>É muito difícil expandir o modelo com precisão para sistemas multicomponentes (ternários ou maiores) sem gerar inconsistências termodinâmicas.</li>
-        </ul></div>`
+      "Equações": `<p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p><div class="eq-block"><i>g</i><sup>E</sup> / <i>RT</i> = (<i>A</i><sub>12</sub><i>A</i><sub>21</sub><i>x</i><sub>1</sub><i>x</i><sub>2</sub>) / (<i>A</i><sub>12</sub><i>x</i><sub>1</sub> + <i>A</i><sub>21</sub><i>x</i><sub>2</sub>)</div><p class="section-label">Coeficientes de atividade (ln γᵢ)</p><div class="eq-block">ln <i>γ</i><sub>1</sub> = <i>A</i><sub>12</sub> / [1 + (<i>A</i><sub>12</sub><i>x</i><sub>1</sub>)/(<i>A</i><sub>21</sub><i>x</i><sub>2</sub>)]<sup>2</sup><br><br>ln <i>γ</i><sub>2</sub> = <i>A</i><sub>21</sub> / [1 + (<i>A</i><sub>21</sub><i>x</i><sub>2</sub>)/(<i>A</i><sub>12</sub><i>x</i><sub>1</sub>)]<sup>2</sup></div>`,
+      "Aplicação": `<div class="content-text"><ul><li><strong>Desvios positivos:</strong> Funciona muito bem para sistemas que apresentam desvios positivos consistentes da Lei de Raoult.</li><li><strong>Assimetria de volatilidade:</strong> Excelente escolha quando as pressões de vapor dos puros são muito diferentes.</li></ul></div>`,
+      "Características": `<div class="content-text"><ul><li><strong>Origem física:</strong> Historicamente derivado da equação de estado de van der Waals para misturas.</li><li>Acomoda diferenças de tamanho molecular usando "frações volumétricas efetivas".</li></ul></div>`,
+      "Limitações": `<div class="content-text"><ul><li>Parte da premissa falsa de que a entropia de mistura é idêntica à de uma mistura ideal.</li><li>Incapaz de representar máximos ou mínimos na curva de ln γ vs composição.</li><li>Difícil expansão para sistemas multicomponentes sem gerar inconsistências termodinâmicas.</li></ul></div>`
     }
   },
   wilson: {
-    name: "Wilson",
-    pill: "Composição Local · VLE Forte",
-    color: "#a0c9b0",
-    colorDark: "#3d7a5a",
+    name: "Wilson", pill: "Composição Local · VLE Forte",
     tabs: {
-      "Equações": `
-        <p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p>
-        <div class="eq-block">
-          <i>g</i><sup>E</sup> / <i>RT</i> = −Σ <i>x</i><sub>i</sub> ln(Σ <i>x</i><sub>j</sub>Λ<sub>ij</sub>)
-        </div>
-        <p class="section-label">Coeficiente de atividade (Sistema Binário)</p>
-        <div class="eq-block">
-          ln <i>γ</i><sub>1</sub> = −ln(<i>x</i><sub>1</sub> + Λ<sub>12</sub><i>x</i><sub>2</sub>) + <i>x</i><sub>2</sub> [ (Λ<sub>12</sub>) / (<i>x</i><sub>1</sub> + Λ<sub>12</sub><i>x</i><sub>2</sub>) − (Λ<sub>21</sub>) / (<i>x</i><sub>2</sub> + Λ<sub>21</sub><i>x</i><sub>1</sub>) ]
-        </div>
-        <p class="ref-note">Parâmetro: Λ<sub>ij</sub> = (<i>V</i><sub>j</sub> / <i>V</i><sub>i</sub>) exp[−(<i>λ</i><sub>ij</sub> − <i>λ</i><sub>ii</sub>)/<i>RT</i>]</p>`,
-      "Aplicação": `
-        <div class="content-text"><ul>
-          <li><strong>Padrão-ouro para misturas não ideais:</strong> Excepcional para soluções de compostos polares e fortemente associativos (álcoois, cetonas, aminas com água).</li>
-          <li>Extensivamente utilizado na simulação e design de colunas de destilação para prever a formação de azeótropos em fluidos perfeitamente miscíveis.</li>
-        </ul></div>`,
-      "Características": `
-        <div class="content-text"><ul>
-          <li><strong>Composição Local:</strong> Marco histórico (1964) que quebrou o paradigma da mistura aleatória. Assume que a concentração de moléculas 'A' ao redor de uma molécula 'B' é diferente da concentração global devido às forças intermoleculares.</li>
-          <li>Os parâmetros energéticos (<i>λ</i><sub>ij</sub>) possuem real significado físico, representando a energia de interação cruzada.</li>
-          <li>Sua dependência explícita da temperatura (<i>T</i>) permite extrapolações isotérmicas e isobáricas com extrema segurança e precisão.</li>
-        </ul></div>`,
-      "Limitações": `
-        <div class="content-text"><ul>
-          <li><strong>Falha crítica em LLE:</strong> Tem a incapacidade matemática absoluta de prever separação de fases líquido-líquido. A função de energia livre gerada pela equação de Wilson é sempre estritamente convexa.</li>
-          <li>Devido à limitação acima, não pode ser aplicado em processos de extração líquido-líquido ou decantação de sistemas parcialmente miscíveis.</li>
-        </ul></div>`
+      "Equações": `<p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p><div class="eq-block"><i>g</i><sup>E</sup> / <i>RT</i> = −Σ <i>x</i><sub>i</sub> ln(Σ <i>x</i><sub>j</sub>Λ<sub>ij</sub>)</div><p class="section-label">Coeficiente de atividade (Sistema Binário)</p><div class="eq-block">ln <i>γ</i><sub>1</sub> = −ln(<i>x</i><sub>1</sub> + Λ<sub>12</sub><i>x</i><sub>2</sub>) + <i>x</i><sub>2</sub> [ (Λ<sub>12</sub>) / (<i>x</i><sub>1</sub> + Λ<sub>12</sub><i>x</i><sub>2</sub>) − (Λ<sub>21</sub>) / (<i>x</i><sub>2</sub> + Λ<sub>21</sub><i>x</i><sub>1</sub>) ]</div><p class="ref-note">Parâmetro: Λ<sub>ij</sub> = (<i>V</i><sub>j</sub> / <i>V</i><sub>i</sub>) exp[−(<i>λ</i><sub>ij</sub> − <i>λ</i><sub>ii</sub>)/<i>RT</i>]</p>`,
+      "Aplicação": `<div class="content-text"><ul><li><strong>Padrão-ouro para misturas não ideais:</strong> Excepcional para soluções de compostos polares e fortemente associativos.</li><li>Extensivamente utilizado na predição de azeótropos em fluidos perfeitamente miscíveis.</li></ul></div>`,
+      "Características": `<div class="content-text"><ul><li><strong>Composição Local:</strong> Quebrou o paradigma da mistura aleatória, assumindo que forças intermoleculares alteram a concentração local ao redor de uma molécula.</li><li>Parâmetros energéticos (<i>λ</i><sub>ij</sub>) possuem real significado físico.</li></ul></div>`,
+      "Limitações": `<div class="content-text"><ul><li><strong>Falha crítica em LLE:</strong> Incapacidade matemática absoluta de prever separação de fases líquido-líquido.</li><li>Não pode ser aplicado em processos de extração ou decantação de sistemas parcialmente miscíveis.</li></ul></div>`
     }
   },
   nrtl: {
-    name: "NRTL",
-    pill: "Versátil · VLE & LLE (3 parâmetros)",
-    color: "#c9b8a0",
-    colorDark: "#8c7050",
+    name: "NRTL", pill: "Versátil · VLE & LLE (3 par.)",
     tabs: {
-      "Equações": `
-        <p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p>
-        <div class="eq-block">
-          <i>g</i><sup>E</sup> / <i>RT</i> = Σ <i>x</i><sub>i</sub> [ (Σ <i>τ</i><sub>ji</sub><i>G</i><sub>ji</sub><i>x</i><sub>j</sub>) / (Σ <i>G</i><sub>ki</sub><i>x</i><sub>k</sub>) ]
-        </div>
-        <p class="section-label">Coeficiente de atividade (ln γ₁ binário)</p>
-        <div class="eq-block">
-          ln <i>γ</i><sub>1</sub> = <i>x</i><sub>2</sub><sup>2</sup> [ <i>τ</i><sub>21</sub>( <i>G</i><sub>21</sub> / (<i>x</i><sub>1</sub>+<i>x</i><sub>2</sub><i>G</i><sub>21</sub>) )<sup>2</sup> + (<i>τ</i><sub>12</sub><i>G</i><sub>12</sub>) / (<i>x</i><sub>2</sub>+<i>x</i><sub>1</sub><i>G</i><sub>12</sub>)<sup>2</sup> ]
-        </div>
-        <p class="ref-note">Onde: <i>G</i><sub>ij</sub> = exp(−<i>α</i><sub>ij</sub><i>τ</i><sub>ij</sub>)  e  <i>τ</i><sub>ij</sub> = (<i>g</i><sub>ij</sub>−<i>g</i><sub>jj</sub>)/<i>RT</i></p>`,
-      "Aplicação": `
-        <div class="content-text"><ul>
-          <li><strong>Universal:</strong> Modelo de escolha primária na indústria para processos complexos de separação, incluindo destilação extrativa e extração líquido-líquido.</li>
-          <li>Suporta a modelagem simultânea de VLE (Vapor-Líquido) e LLE (Líquido-Líquido), essencial para misturas que formam múltiplas fases aquosas e orgânicas.</li>
-          <li>Possui extensões modernas (eNRTL) amplamente usadas na simulação de soluções eletrolíticas.</li>
-        </ul></div>`,
-      "Características": `
-        <div class="content-text"><ul>
-          <li><strong>Non-Random Two-Liquid:</strong> Desenvolvido por Renon e Prausnitz (1968), expande a teoria de composição local de Wilson adicionando o conceito formal de teoria de dois líquidos.</li>
-          <li>Introduz o parâmetro crucial de <strong>não-aleatoriedade</strong> (<i>α</i><sub>ij</sub>), que pondera o quão ordenada é a distribuição das moléculas na mistura.</li>
-          <li>A estrutura de sua equação permite a formação de regiões de concavidade na curva de energia, resolvendo a limitação de LLE do modelo de Wilson.</li>
-        </ul></div>`,
-      "Limitações": `
-        <div class="content-text"><ul>
-          <li>Exige 3 parâmetros regressivos por par binário (<i>τ</i><sub>ij</sub>, <i>τ</i><sub>ji</sub> e <i>α</i><sub>ij</sub>), necessitando de uma base de dados experimentais mais rica e maior cuidado na regressão estatística.</li>
-          <li>O parâmetro <i>α</i> muitas vezes é fixado arbitrariamente (frequentemente em 0.3) pelos engenheiros para evitar instabilidade algorítmica e múltiplos mínimos locais durante a otimização em simuladores.</li>
-        </ul></div>`
+      "Equações": `<p class="section-label">Energia de Gibbs em excesso (gᴱ/RT)</p><div class="eq-block"><i>g</i><sup>E</sup> / <i>RT</i> = Σ <i>x</i><sub>i</sub> [ (Σ <i>τ</i><sub>ji</sub><i>G</i><sub>ji</sub><i>x</i><sub>j</sub>) / (Σ <i>G</i><sub>ki</sub><i>x</i><sub>k</sub>) ]</div><p class="section-label">Coeficiente de atividade (ln γ₁ binário)</p><div class="eq-block">ln <i>γ</i><sub>1</sub> = <i>x</i><sub>2</sub><sup>2</sup> [ <i>τ</i><sub>21</sub>( <i>G</i><sub>21</sub> / (<i>x</i><sub>1</sub>+<i>x</i><sub>2</sub><i>G</i><sub>21</sub>) )<sup>2</sup> + (<i>τ</i><sub>12</sub><i>G</i><sub>12</sub>) / (<i>x</i><sub>2</sub>+<i>x</i><sub>1</sub><i>G</i><sub>12</sub>)<sup>2</sup> ]</div><p class="ref-note">Onde: <i>G</i><sub>ij</sub> = exp(−<i>α</i><sub>ij</sub><i>τ</i><sub>ij</sub>)  e  <i>τ</i><sub>ij</sub> = (<i>g</i><sub>ij</sub>−<i>g</i><sub>jj</sub>)/<i>RT</i></p>`,
+      "Aplicação": `<div class="content-text"><ul><li><strong>Universal:</strong> Modelo primário na indústria para processos de separação complexos.</li><li>Suporta modelagem simultânea de VLE e LLE, vital para misturas que formam múltiplas fases aquosas e orgânicas.</li></ul></div>`,
+      "Características": `<div class="content-text"><ul><li><strong>Non-Random Two-Liquid:</strong> Expande a teoria de composição local de Wilson adicionando o conceito de dois líquidos.</li><li>Introduz o parâmetro de <strong>não-aleatoriedade</strong> (<i>α</i><sub>ij</sub>).</li><li>Resolve a limitação do Wilson ao permitir a formação de regiões de concavidade na curva de energia.</li></ul></div>`,
+      "Limitações": `<div class="content-text"><ul><li>Exige 3 parâmetros regressivos por par binário, necessitando de uma base de dados mais rica.</li><li>O parâmetro <i>α</i> muitas vezes é fixado arbitrariamente (ex: 0.3) para evitar instabilidade em simuladores.</li></ul></div>`
     }
   },
   uniquac: {
-    name: "UNIQUAC",
-    pill: "Quase-reticular · Tamanho e Forma",
-    color: "#b8a0c9",
-    colorDark: "#6b4a8c",
+    name: "UNIQUAC", pill: "Quase-reticular · Tamanho/Forma",
     tabs: {
-      "Equações": `
-        <p class="section-label">Estrutura Modular de gᴱ</p>
-        <div class="eq-block">
-          <i>g</i><sup>E</sup> / <i>RT</i> = (<i>g</i><sup>E</sup> / <i>RT</i>)<sub>combinação</sub> + (<i>g</i><sup>E</sup> / <i>RT</i>)<sub>residual</sub>
-        </div>
-        <p class="section-label">Coeficiente de atividade (ln γᵢ)</p>
-        <div class="eq-block">
-          ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>C</sup> + ln <i>γ</i><sub>i</sub><sup>R</sup>
-        </div>
-        <p class="ref-note">Requer parâmetros puramente estruturais tabelados (<i>r</i> de volume e <i>q</i> de área) para a parte combinatória.</p>`,
-      "Aplicação": `
-        <div class="content-text"><ul>
-          <li><strong>Disparidade de tamanho:</strong> Excelente para simular soluções contendo grandes moléculas (como polímeros ou proteínas) misturadas com solventes orgânicos comuns.</li>
-          <li>Usado de forma robusta em simuladores comerciais (HYSYS, Aspen Plus) para predizer equilíbrios de fase complexos, abrangendo VLE, LLE e Equilíbrio Sólido-Líquido (SLE).</li>
-        </ul></div>`,
-      "Características": `
-        <div class="content-text"><ul>
-          <li><strong>Universal Quasi-Chemical:</strong> Abrams e Prausnitz (1975) revolucionaram ao dividir a modelagem em duas frentes físicas distintas.</li>
-          <li><strong>Parte Combinatória:</strong> Contabiliza as diferenças entrópicas puramente baseadas no tamanho (<i>r</i>) e área superficial (<i>q</i>) das moléculas, utilizando constantes já tabeladas por métodos geométricos (contribuição de van der Waals).</li>
-          <li><strong>Parte Residual:</strong> Captura as forças energéticas intermoleculares (entalpia), dependendo apenas de 2 parâmetros binários (<i>τ</i><sub>ij</sub>) que precisam ser ajustados.</li>
-        </ul></div>`,
-      "Limitações": `
-        <div class="content-text"><ul>
-          <li>A formulação matemática é extensa e computacionalmente densa, podendo gerar maior tempo de convergência em simulações robustas.</li>
-          <li>Apesar do rigor físico, para sistemas compostos apenas por moléculas pequenas e altamente polares (como água e metanol), a hipótese de rede rígida (quase-reticular) faz o modelo performar marginalmente pior que o NRTL no ajuste experimental.</li>
-        </ul></div>`
+      "Equações": `<p class="section-label">Estrutura Modular de gᴱ</p><div class="eq-block"><i>g</i><sup>E</sup> / <i>RT</i> = (<i>g</i><sup>E</sup> / <i>RT</i>)<sub>combinação</sub> + (<i>g</i><sup>E</sup> / <i>RT</i>)<sub>residual</sub></div><p class="section-label">Coeficiente de atividade (ln γᵢ)</p><div class="eq-block">ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>C</sup> + ln <i>γ</i><sub>i</sub><sup>R</sup></div><p class="ref-note">Requer parâmetros estruturais tabelados (<i>r</i> de volume e <i>q</i> de área) para a parte combinatória.</p>`,
+      "Aplicação": `<div class="content-text"><ul><li><strong>Disparidade de tamanho:</strong> Excelente para simular soluções contendo polímeros ou proteínas misturadas com solventes orgânicos.</li><li>Usado robustamente para predizer equilíbrios complexos: VLE, LLE e SLE.</li></ul></div>`,
+      "Características": `<div class="content-text"><ul><li><strong>Universal Quasi-Chemical:</strong> Divide a modelagem na parte Combinatória (tamanho/forma via parâmetros geométricos r e q) e Residual (interações energéticas via τ<sub>ij</sub>).</li></ul></div>`,
+      "Limitações": `<div class="content-text"><ul><li>Formulação extensa e computacionalmente densa.</li><li>Para sistemas compostos apenas por moléculas pequenas e polares, a hipótese de rede rígida o faz performar levemente pior que o NRTL.</li></ul></div>`
     }
   },
   unifac: {
-    name: "UNIFAC",
-    pill: "Contribuição de Grupos · Preditivo",
-    color: "#c9c0a0",
-    colorDark: "#7a6e3d",
+    name: "UNIFAC", pill: "Contribuição de Grupos · Preditivo",
     tabs: {
-      "Equações": `
-        <p class="section-label">Equação análoga ao UNIQUAC</p>
-        <div class="eq-block">
-          ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>C</sup> + ln <i>γ</i><sub>i</sub><sup>R</sup>
-        </div>
-        <p class="section-label">Cálculo Residual por Grupos</p>
-        <div class="eq-block">
-          ln <i>γ</i><sub>i</sub><sup>R</sup> = Σ <i>ν</i><sub>k</sub><sup>(i)</sup> [ ln Γ<sub>k</sub> − ln Γ<sub>k</sub><sup>(i)</sup> ]
-        </div>
-        <p class="ref-note">Onde Γ<sub>k</sub> é o coeficiente de atividade do <i>grupo funcional k</i> na mistura, avaliado por tabelas unificadas do consórcio UNIFAC.</p>`,
-      "Aplicação": `
-        <div class="content-text"><ul>
-          <li><strong>Design preditivo:</strong> Ferramenta vital quando o engenheiro precisa projetar processos para os quais não existem dados termodinâmicos experimentais na literatura.</li>
-          <li>Triagem e seleção rápida de solventes (ex: extração de um princípio ativo farmacêutico) sem necessidade de medições laboratoriais preliminares.</li>
-          <li>Determinação de coeficientes de partição para estudos de impacto ambiental e limites de inflamabilidade de novas misturas orgânicas.</li>
-        </ul></div>`,
-      "Características": `
-        <div class="content-text"><ul>
-          <li><strong>Solução de Grupos:</strong> Dá um salto conceitual brilhante: a mistura não é vista como moléculas inteiras interagindo, mas sim como uma "sopa" de blocos básicos (grupos funcionais como -CH3, -OH, -COOH).</li>
-          <li>Permite prever o comportamento de dezenas de milhares de moléculas usando parâmetros de interação tabelados e consolidados mundialmente para algumas centenas de pares de grupos funcionais.</li>
-          <li><strong>Capacidade estritamente preditiva:</strong> Dispensa por completo a regressão de dados experimentais da mistura de interesse.</li>
-        </ul></div>`,
-      "Limitações": `
-        <div class="content-text"><ul>
-          <li><strong>Independência estrutural:</strong> A premissa de que um grupo funcional se comporta igualmente independente da molécula falha ao ignorar fortemente os efeitos estéricos (geometria) e a vizinhança intra-molecular. Exemplo clássico: o modelo tem dificuldade extrema em distinguir o comportamento de isômeros (orto, meta e para).</li>
-          <li>A acurácia é inerentemente inferior à de modelos correlativos (como NRTL) que foram calibrados para o sistema exato.</li>
-          <li>Gera previsões ruins para sistemas operando próximos ao ponto crítico termodinâmico.</li>
-        </ul></div>`
+      "Equações": `<p class="section-label">Equação análoga ao UNIQUAC</p><div class="eq-block">ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>C</sup> + ln <i>γ</i><sub>i</sub><sup>R</sup></div><p class="section-label">Cálculo Residual por Grupos</p><div class="eq-block">ln <i>γ</i><sub>i</sub><sup>R</sup> = Σ <i>ν</i><sub>k</sub><sup>(i)</sup> [ ln Γ<sub>k</sub> − ln Γ<sub>k</sub><sup>(i)</sup> ]</div><p class="ref-note">Γ<sub>k</sub> é o coeficiente de atividade do grupo funcional k, avaliado por tabelas unificadas do consórcio UNIFAC.</p>`,
+      "Aplicação": `<div class="content-text"><ul><li><strong>Design preditivo:</strong> Ferramenta vital quando não existem dados experimentais na literatura.</li><li>Triagem rápida de solventes (ex: extração farmacêutica) sem medições preliminares.</li></ul></div>`,
+      "Características": `<div class="content-text"><ul><li><strong>Solução de Grupos:</strong> A mistura não é vista como moléculas inteiras, mas como uma "sopa" de blocos básicos (grupos funcionais como -CH3, -OH).</li><li>Dispensa por completo a regressão de dados da mistura específica.</li></ul></div>`,
+      "Limitações": `<div class="content-text"><ul><li><strong>Independência estrutural:</strong> A premissa de que um grupo se comporta de forma idêntica independente da molécula ignora efeitos estéricos. Falha com isômeros.</li><li>Acurácia inerentemente inferior à de modelos correlativos calibrados para o sistema exato.</li></ul></div>`
     }
   }
 };
 
-// Panel logic
+// --- LÓGICA DO MOTOR DA ÁRVORE ---
+const container = document.getElementById('tree-container');
+let pathHistory = [];
+
+function initTree() {
+  container.innerHTML = '';
+  pathHistory = [];
+  renderNode('inicio');
+}
+
+function renderNode(nodeId) {
+  if (TREE_DATA[nodeId]) {
+    const nodeData = TREE_DATA[nodeId];
+    
+    const nodeDiv = document.createElement('div');
+    nodeDiv.className = 'tree-node';
+    nodeDiv.id = `node-${nodeId}`;
+    
+    // Constrói o HTML do nó. Se existir dica (hint), adiciona o botão de toggle.
+    let hintHTML = '';
+    if (nodeData.hint) {
+      hintHTML = `
+        <button class="hint-toggle" onclick="toggleHint('${nodeId}')">💡 Ver dica</button>
+        <div class="hint-content" id="hint-${nodeId}">${nodeData.hint}</div>
+      `;
+    }
+
+    nodeDiv.innerHTML = `
+      <div class="question-box">
+        <h3 class="question-text">${nodeData.q}</h3>
+        ${hintHTML}
+      </div>
+      <div class="options-row">
+        ${nodeData.options.map((opt, index) => 
+          `<button class="decision-btn" onclick="makeChoice('${nodeId}', '${opt.next}', this)">${opt.label}</button>`
+        ).join('')}
+      </div>
+    `;
+    
+    container.appendChild(nodeDiv);
+    pathHistory.push(nodeId);
+    
+    setTimeout(() => {
+      nodeDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+
+  } else if (RESULTS[nodeId]) {
+    const resData = RESULTS[nodeId];
+    
+    const resDiv = document.createElement('div');
+    resDiv.className = 'tree-node';
+    
+    let modelsHTML = resData.models.map(m => {
+      if (m.isDetail) {
+        return `<button class="model-card-active" onclick="openPanel('${m.key}')">${m.name}</button>`;
+      } else {
+        return `<div class="model-card-inactive">${m.name}</div>`;
+      }
+    }).join('');
+
+    resDiv.innerHTML = `
+      <div class="result-box">
+        <p class="result-title">${resData.title}</p>
+        <div class="models-grid">
+          ${modelsHTML}
+        </div>
+        <button class="reset-btn" onclick="initTree()">⟲ Refazer Análise</button>
+      </div>
+    `;
+    
+    container.appendChild(resDiv);
+    
+    setTimeout(() => {
+      resDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 50);
+  }
+}
+
+function makeChoice(parentNodeId, nextNodeId, btnElement) {
+  const nodeIndex = pathHistory.indexOf(parentNodeId);
+  
+  const allNodes = container.querySelectorAll('.tree-node');
+  for (let i = nodeIndex + 1; i < allNodes.length; i++) {
+    allNodes[i].remove();
+  }
+  
+  pathHistory = pathHistory.slice(0, nodeIndex + 1);
+
+  const parentDiv = document.getElementById(`node-${parentNodeId}`);
+  const allBtns = parentDiv.querySelectorAll('.decision-btn');
+  
+  allBtns.forEach(btn => {
+    btn.classList.remove('selected');
+    btn.classList.add('dimmed');
+  });
+  
+  btnElement.classList.add('selected');
+  btnElement.classList.remove('dimmed');
+
+  // Fecha qualquer dica que esteja aberta naquele bloco
+  const hintContent = document.getElementById(`hint-${parentNodeId}`);
+  if(hintContent) hintContent.classList.remove('show');
+
+  renderNode(nextNodeId);
+}
+
+// Alterna a visualização da dica
+function toggleHint(nodeId) {
+  const hintContent = document.getElementById(`hint-${nodeId}`);
+  if (hintContent) {
+    hintContent.classList.toggle('show');
+  }
+}
+
+// Inicia a aplicação
+window.onload = initTree;
+
+
+// --- LÓGICA DO PAINEL LATERAL ---
 const panel = document.getElementById('detail-panel');
 const backdrop = document.getElementById('panel-backdrop');
-const panelTitle = document.getElementById('panel-title');
-const panelPill = document.getElementById('panel-pill');
-const tabNav = document.getElementById('tab-nav');
-const tabPanels = document.getElementById('tab-panels');
-
-let activeNode = null;
 
 function openPanel(modelKey) {
-  const m = MODELS[modelKey];
+  const m = MODELS_DETAIL[modelKey];
   if (!m) return;
 
-  // Update header
-  panelTitle.textContent = m.name;
-  panelPill.textContent = m.pill;
-  panelPill.style.background = m.color + '33';
-  panelPill.style.color = m.colorDark;
-  panelPill.style.border = '1px solid ' + m.color;
-  document.documentElement.style.setProperty('--accent', m.colorDark);
+  document.getElementById('panel-title').textContent = m.name;
+  document.getElementById('panel-pill').textContent = m.pill;
 
-  // Build tabs
-  tabNav.innerHTML = '';
-  tabPanels.innerHTML = '';
+  const tabNav = document.getElementById('tab-nav');
+  const tabPanels = document.getElementById('tab-panels');
+  tabNav.innerHTML = ''; tabPanels.innerHTML = '';
+  
   const tabKeys = Object.keys(m.tabs);
   tabKeys.forEach((key, i) => {
     const btn = document.createElement('button');
@@ -766,15 +506,8 @@ function openPanel(modelKey) {
     tabPanels.appendChild(pane);
   });
 
-  // Highlight node
-  if (activeNode) activeNode.classList.remove('active');
-  activeNode = document.querySelector(`[data-model="${modelKey}"]`);
-  if (activeNode) activeNode.classList.add('active');
-
-  // Show
   backdrop.classList.add('visible');
   requestAnimationFrame(() => panel.classList.add('open'));
-  panel.focus();
 }
 
 function switchTab(key) {
@@ -785,16 +518,7 @@ function switchTab(key) {
 function closePanel() {
   panel.classList.remove('open');
   backdrop.classList.remove('visible');
-  if (activeNode) { activeNode.classList.remove('active'); activeNode = null; }
 }
-
-document.querySelectorAll('.node-group').forEach(n => {
-  n.addEventListener('click', () => openPanel(n.dataset.model));
-  n.setAttribute('tabindex', '0');
-  n.setAttribute('role', 'button');
-  n.setAttribute('aria-label', 'Ver modelo ' + n.dataset.model);
-  n.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openPanel(n.dataset.model); });
-});
 
 document.getElementById('close-btn').addEventListener('click', closePanel);
 backdrop.addEventListener('click', closePanel);
