@@ -1011,31 +1011,35 @@ const MODELS_DETAIL = {
     pill:"Forças eletrostáticas · Soluções iônicas",
     accent:"#603d80",
     tabs:{
-      "Equações":`
-        <p class="section-label">eNRTL - contribuições aditivas</p>
+      "Equações e Fundamentos":`
+        <p class="section-label">1. Eletrólito NRTL (eNRTL)</p>
+        <p class="prose">Proposto por Chen e Evans (1982, 1986), expressa a energia de Gibbs em excesso de forma aditiva para acoplar forças físicas que operam em escalas de distância diferentes:</p>
         <div class="eq-block"><i>g</i><sup>E</sup> = <i>g</i><sup>E</sup><sub>PDH</sub> + <i>g</i><sup>E</sup><sub>Born</sub> + <i>g</i><sup>E</sup><sub>local</sub></div>
-        <p class="ref-note">PDH: Pitzer-Debye-Hückel (longo alcance) · Born: transferência de carga entre meios · local: NRTL de curto alcance</p>
-        <p class="section-label">Modelo de Pitzer - série virial iônica</p>
-        <div class="eq-block">ln <i>γ</i><sub>±</sub> = <i>f</i>(I) + Σ<sub>ij</sub>β<sub>ij</sub><i>m</i><sub>j</sub> + Σ<sub>ijk</sub>μ<sub>ijk</sub><i>m</i><sub>j</sub><i>m</i><sub>k</sub></div>
-        <p class="ref-note">I: força iônica · m: molalidade · β, μ: parâmetros de interação específicos iônica de Pitzer</p>`,
+        <p class="prose">Onde <b><i>g</i><sup>E</sup><sub>PDH</sub></b> é o termo de Pitzer-Debye-Hückel que modela as interações eletrostáticas iônicas de <i>longo alcance</i>; <b><i>g</i><sup>E</sup><sub>Born</sub></b> trata do efeito de transferência dos íons do estado infinitamente diluído em água para o meio solvente misto; e <b><i>g</i><sup>E</sup><sub>local</sub></b> calcula as forças de <i>curto alcance</i> via uma formulação NRTL modificada sob a premissa de neutralidade de carga local em torno das células iônicas.</p>
+        
+        <p class="subsection">2. Modelo Virial de Pitzer</p>
+        <p class="prose">Baseia-se em uma expansão virial iônica fundamentada na mecânica estatística para descrever soluções aquosas concentradas em escala de molalidade:</p>
+        <div class="eq-block">ln <i>γ</i><sub>±</sub> = |<i>z</i><sub>+</sub><i>z</i><sub>−</sub>| <i>f</i><sup><span style="font-family: serif;">γ</span></sup>(I) + <i>m</i> [ 2<i>ν</i><sub>+</sub><i>ν</i><sub>−</sub>/<i>ν</i> ] <i>B</i><sup><span style="font-family: serif;">γ</span></sup><sub>MX</sub>(I) + <i>m</i><sup>2</sup> [ 2(<i>ν</i><sub>+</sub><i>ν</i><sub>−</sub>)<sup>1.5</sup>/<i>ν</i> ] <i>C</i><sup><span style="font-family: serif;">γ</span></sup><sub>MX</sub></div>
+        <p class="ref-note">Onde <i>I</i> é a força iônica do meio (<i>I = 0.5 Σ m_i z_i²</i>), <i>f<sup><span style="font-family: serif;">γ</span></sup></i> representa o termo limitante de Debye-Hückel, e <i>B<sup><span style="font-family: serif;">γ</span></sup></i> e <i>C<sup><span style="font-family: serif;">γ</span></sup></i> são coeficientes viriais binários e ternários que contabilizam interações de curto alcance íon-íon específicas.</p>`,
       "Aplicação":`
-        <p class="prose">Modelos para eletrólitos são <strong>obrigatórios</strong> quando há presença de íons na solução. Modelos convencionais de g<sup>E</sup> ignoram as forças de Coulomb de longo alcance e produzem resultados incorretos.</p>
+        <p class="prose">Modelos eletrolíticos são estritamente mandatórios sempre que o meio contiver espécies que sofrem dissociação ou ionização ácida/básica, gerando íons livres.</p>
         <ul class="dot-list">
-          <li><strong>eNRTL (Chen & Evans, 1986):</strong> padrão em Aspen Plus para soluções aquosas de sais, ácidos e bases - combina PDH para interações iônicas de longo alcance com NRTL para interações de curto alcance entre moléculas e íons.</li>
-          <li><strong>Modelos de Pitzer:</strong> expansão virial específica para soluções iônicas - especialmente precisa para soluções concentradas de sais inorgânicos (salmouras, processos de dessalinização, extração de minerais).</li>
+          <li><strong>Remoção de Gases Ácidos:</strong> Modelagem de sistemas de tratamento de gás natural (absorção química de CO₂ e H₂S em soluções aquosas de alcanolaminas como MDEA, MEA e DEA).</li>
+          <li><strong>Processos de Separação de Sais:</strong> Simulação rigorosa de operações de cristalização, evaporação e precipitação a partir de salmouras concentradas.</li>
+          <li>Simulação de efluentes industriais complexos, processos de dessalinização por membranas/térmicos e sistemas geoquímicos.</li>
         </ul>`,
       "Características":`
-        <p class="prose">A grande diferença em relação aos modelos de g<sup>E</sup> convencionais é a inclusão do <strong>termo de Pitzer-Debye-Hückel</strong>, que captura as forças eletrostáticas de longo alcance entre íons - forças que decaem muito mais lentamente com a distância do que as interações de van der Waals ou dipolo-dipolo.</p>
+        <p class="prose">A inclusão de termos eletrostáticos de longo alcance resolve o colapso matemático que modelos moleculares puramente convencionais sofrem na presença de cargas elétricas livres.</p>
         <ul class="dot-list">
-          <li>eNRTL: resolve a limitação de neutralidade de carga - trabalha com pares de íons (cátion + ânion) como unidade básica.</li>
-          <li>Pitzer: extremamente preciso para soluções concentradas de eletrólitos simples; usa série virial truncada em molalidade.</li>
+          <li><strong>Convenção Assimétrica:</strong> Adotam o estado de referência assimétrico, tratando o solvente molecular na convenção de Lewis-Randall (unidade para a espécie pura) e os íons referenciados à diluição infinita em água.</li>
+          <li><strong>eNRTL (Chen):</strong> Reduz a complexidade combinatória ao tratar os íons como pares iônicos neutros ao avaliar o balanço local de frações moleculares, diminuindo o número de parâmetros regressivos necessários.</li>
+          <li><strong>Equações de Pitzer:</strong> Apresentam extraordinária acurácia empírica para soluções aquosas simples e altamente concentradas (forças iônicas superiores a 6 mol/kg), sendo o padrão para modelagem de eletrólitos fortes inorgânicos.</li>
         </ul>`,
       "Limitações":`
         <ul class="dot-list">
-          <li>Complexidade matemática elevada - vasto número de parâmetros de interação íon-íon e íon-solvente.</li>
-          <li>Banco de parâmetros limitado - compostos menos comuns podem não ter parâmetros disponíveis.</li>
-          <li>Pitzer: menos adequado para misturas de múltiplos eletrólitos e para solventes não aquosos.</li>
-          <li>Implementação computacional delicada - não recomendável sem ambiente de simulação validado.</li>
+          <li><strong>Alta Densidade Paramétrica:</strong> Exigem uma quantidade massiva de parâmetros de interação binária específicos (íon-íon, molécula-íon, íon-solvente). Na ausência de dados publicados para um par específico, o modelo torna-se inutilizável sem regressão prévia de dados de laboratório.</li>
+          <li><strong>Restrição de Solvente:</strong> O modelo clássico de Pitzer perde rigor físico e precisão matemática de forma acentuada ao operar fora do meio puramente aquoso ou em solventes orgânicos de baixa constante dielétrica.</li>
+          <li><strong>Instabilidade Numérica:</strong> O acoplamento do equilíbrio químico de especiação iônica (constantes de dissociação e produto de solubilidade) com coeficientes de atividade fortemente não-lineares gera sistemas algébricos complexos, aumentando o risco de não-convergência em simuladores comerciais.</li>
         </ul>`
     }
   },
