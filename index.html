@@ -781,38 +781,32 @@ const MODELS_DETAIL = {
   },
   unifac:{
     name:"UNIFAC", tag:"Modelo de gᴱ · Preditivo",
-    pill:"Contribuição de grupos · Sem dados necessários",
+    pill:"Contribuição de grupos · Sem dados da mistura",
     accent:"#5a7868",
     tabs:{
-      "Equações":`
+      "Equações e Fundamentos":`
         <p class="section-label">Estrutura análoga ao UNIQUAC</p>
         <div class="eq-block">ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>C</sup> + ln <i>γ</i><sub>i</sub><sup>R</sup></div>
-        <p class="section-label">Contribuição residual por grupos funcionais</p>
-        <div class="eq-block">ln <i>γ</i><sub>i</sub><sup>R</sup> = Σ<sub>k</sub> ν<sub>k</sub><sup>(i)</sup>[ln Γ<sub>k</sub> − ln Γ<sub>k</sub><sup>(i)</sup>]</div>
-        <p class="ref-note">Ψ<sub>mn</sub> = exp(−a<sub>mn</sub>/T) · a<sub>mn</sub>: parâmetros de interação grupo m–grupo n (tabelas UNIFAC)</p>`,
+        <p class="section-label">A Contribuição de Grupos (Termo Residual)</p>
+        <p class="prose">Em vez de interações entre moléculas inteiras, o termo residual soma as interações entre os <strong>grupos funcionais</strong> (<i>k</i>) que formam a molécula:</p>
+        <div class="eq-block">ln <i>γ</i><sub>i</sub><sup>R</sup> = Σ<sub>k</sub> <i>ν</i><sub>k</sub><sup>(i)</sup> [ ln Γ<sub>k</sub> − ln Γ<sub>k</sub><sup>(i)</sup> ]</div>
+        <p class="ref-note">Onde: <i>ν</i><sub>k</sub><sup>(i)</sup> é o número de grupos do tipo <i>k</i> na molécula <i>i</i>; Γ<sub>k</sub> é o coeficiente de atividade do grupo na mistura; e Γ<sub>k</sub><sup>(i)</sup> é o coeficiente do grupo na substância pura. O parâmetro de interação entre os grupos é Ψ<sub>mn</sub> = exp(−a<sub>mn</sub>/T).</p>`,
       "Aplicação":`
-        <p class="prose">UNIFAC é o único modelo <strong>preditivo</strong> do conjunto - estima γ<sub>i</sub> sem nenhum dado experimental da mistura de interesse, a partir apenas da estrutura molecular dos componentes.</p>
+        <p class="prose">O UNIFAC (UNIQUAC Functional-group Activity Coefficients) é a principal ferramenta global de <strong>triagem preditiva (screening)</strong> em Engenharia Química.</p>
         <ul class="dot-list">
-          <li>Triagem de solventes em projeto de processos sem medições laboratoriais.</li>
-          <li>Estimativa de log K<sub>ow</sub>, pressões de vapor de misturas, limites de inflamabilidade.</li>
-          <li>Fallback automático em simuladores (Aspen, HYSYS) quando dados VLE não estão no banco.</li>
-        </ul>
-        <p class="subsection">Versões especializadas</p>
-        <div class="highlight-box">
-          <strong>Original</strong> (Fredenslund, 1975): parâmetros independentes de T - bom para VLE.<br>
-          <strong>mod-UNIFAC Dortmund</strong> (1993): a<sub>mn</sub>(T) quadrático - melhor para h<sup>E</sup>, γ<sup>∞</sup> e LLE.<br>
-          <strong>UNIFAC-LLE</strong>: parâmetros calibrados exclusivamente com dados LLE.
-        </div>`,
+          <li><strong>Projeto Conceitual:</strong> Seleção inicial de solventes e fluxogramas de separação para misturas que nunca foram medidas em laboratório.</li>
+          <li>Estimativa de azeótropos, pressões de bolha e orvalho em misturas multicomponentes.</li>
+          <li>É o modelo de "fallback" (segurança) nos simuladores de processo (Aspen, HYSYS): se faltar o parâmetro binário de uma substância, o software usa o UNIFAC automaticamente.</li>
+        </ul>`,
       "Características":`
-        <p class="prose">A hipótese central: grupos funcionais (−CH<sub>3</sub>, −OH, −COOH, C=O…) contribuem igualmente para as propriedades termodinâmicas independentemente da molécula em que aparecem. Com ~50 grupos principais, o UNIFAC descreve o comportamento de milhares de compostos a partir de algumas centenas de pares de interação.</p>`,
+        <p class="prose">A genialidade do método (Fredenslund, Prausnitz e Jones, 1975) é a premissa de que a solução não é uma mistura de moléculas, mas uma mistura de <strong>grupos funcionais</strong> (ex: -CH3, -OH, -COOH). Como existem milhares de moléculas, mas apenas algumas dezenas de grupos funcionais básicos, pode-se prever o comportamento de infinitas misturas a partir de uma matriz tabelada de poucas interações intergrupais.</p>
+        <div class="highlight-box"><strong>Dortmund mod-UNIFAC:</strong> Uma versão modificada que introduz dependência da temperatura nos parâmetros (a, b, c) e corrige os volumes de van der Waals, melhorando drasticamente a previsão de γ<sup>∞</sup> e calores de mistura.</div>`,
       "Limitações":`
         <ul class="dot-list">
-          <li><strong>Efeito de vizinhança ignorado:</strong> não distingue isômeros orto/meta/para.</li>
-          <li>Menos preciso que NRTL/UNIQUAC ajustados quando dados estão disponíveis.</li>
-          <li>Grupos não tabelados → modelo inaplicável sem extensões.</li>
-          <li>Inválido próximo ao ponto crítico.</li>
-        </ul>
-        <div class="highlight-box"><strong>Regra de ouro:</strong> use UNIFAC para triagem. Quando a decisão de projeto depende do resultado, valide com dados e refine com NRTL ou UNIQUAC.</div>`
+          <li><strong>Efeito de Vizinhança (Isômeros):</strong> Como a premissa assume que um grupo -OH se comporta da mesma forma independente de onde está ligado, o UNIFAC clássico é quase "cego" para efeitos estéricos severos e tem dificuldade em distinguir isômeros estruturais (orto, meta, para).</li>
+          <li>Inerentemente menos preciso que modelos correlativos (como Wilson ou NRTL) parametrizados com dados experimentais reais daquela mistura específica.</li>
+          <li>Se a sua molécula contiver um grupo funcional atípico cujos parâmetros de interação (<i>a<sub>mn</sub></i>) não constem na matriz do consórcio UNIFAC, o modelo não poderá ser resolvido.</li>
+        </ul>`
     }
   },
   unifac_lle:{
@@ -1061,28 +1055,31 @@ const MODELS_DETAIL = {
     }
   },
   fsac:{
-    name:"COSMO-SAC / F-SAC", tag:"Modelo quântico-estatístico · Preditivo",
+    name:"COSMO-SAC / F-SAC", tag:"Modelo Quântico · Preditivo Universal",
     pill:"Densidade de carga superficial · DFT",
     accent:"#5a7868",
     tabs:{
-      "Conceito":`
-        <p class="section-label">Integração do sigma-profile molecular</p>
-        <div class="eq-block">ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>comb</sup> + ln <i>γ</i><sub>i</sub><sup>res</sup>(σ-profile)</div>
-        <p class="ref-note">σ-profile: distribuição da densidade de carga superficial da molécula, obtida por DFT (Teoria do Funcional da Densidade).</p>`,
+      "Equações e Fundamentos":`
+        <p class="section-label">Integração do Sigma-Profile molecular</p>
+        <div class="eq-block">ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>C</sup> + ln <i>γ</i><sub>i</sub><sup>res</sup>(<i>p<sub>i</sub>(σ)</i>)</div>
+        <p class="section-label">A parcela Residual Quântica</p>
+        <p class="prose">A interação não é baseada em parâmetros tabelados de grupos empíricos, mas sim no <strong>Perfil-Sigma (<i>p(σ)</i>)</strong> da molécula, que quantifica a área superficial da molécula que possui uma determinada densidade de carga elétrostatica (<i>σ</i>):</p>
+        <div class="eq-block">ln <i>γ</i><sub>i</sub><sup>res</sup> = (<i>A<sub>i</sub></i> / <i>a<sub>eff</sub></i>) ∫ <i>p<sub>i</sub>(σ)</i> [ ln Γ(<i>σ</i>) − ln Γ<sub>i</sub>(<i>σ</i>) ] d<i>σ</i></div>
+        <p class="ref-note">Onde: Γ(<i>σ</i>) é o coeficiente de atividade do "segmento de carga σ" na mistura, calculado estatisticamente. Os dados iniciais vêm da resolução da equação de Schrödinger (Química Quântica).</p>`,
       "Aplicação":`
+        <p class="prose">Esta classe de modelos representa a fronteira do conhecimento (estado da arte) e é utilizada no design de processos inovadores onde <strong>moléculas complexas, novas ou exóticas</strong> estão presentes.</p>
         <ul class="dot-list">
-          <li>Projeto de novos solventes na indústria farmacêutica e química fina - sem qualquer dado experimental de mistura.</li>
-          <li>Triagem de ILs (líquidos iônicos) como solventes verdes.</li>
-          <li>Sistemas para os quais nenhum parâmetro de UNIFAC está disponível.</li>
+          <li><strong>Indústria Farmacêutica e Química Fina:</strong> Seleção de solventes para princípios ativos de medicamentos, cujas moléculas são complexas demais para as tabelas do UNIFAC.</li>
+          <li>Projeto de Líquidos Iônicos (ILs) e Deep Eutectic Solvents (DES) para aplicações em química verde.</li>
+          <li>Previsão de solubilidade de sólidos complexos e polímeros avançados.</li>
         </ul>`,
       "Características":`
-        <p class="prose">COSMO-SAC e F-SAC representam o <strong>estado da arte em predição termodinâmica</strong>. A inovação central é calcular as interações moleculares a partir da distribuição de carga superficial (σ-profile) de cada molécula, obtida por cálculos de mecânica quântica (DFT + modelo de solvente contínuo COSMO). Isso torna o modelo completamente preditivo - sem parâmetros de mistura ajustados.</p>`,
+        <p class="prose">O modelo COSMO-SAC (Lin & Sandler, 2002) e sua vertente F-SAC (Soares & Gerber, 2013) eliminam a dependência de tabelas empíricas preexistentes. A densidade de carga da molécula é calculada <i>ab initio</i> (desde o princípio) utilizando a <strong>Teoria do Funcional da Densidade (DFT)</strong> acoplada a um modelo contínuo de solvatação (COSMO). O resultado computacional, o "sigma-profile", atua como a identidade digital única da molécula para prever a termodinâmica.</p>`,
       "Limitações":`
         <ul class="dot-list">
-          <li>Custo computacional inicial alto: cálculo DFT/COSMO necessário para cada molécula nova.</li>
-          <li>Precisão ainda inferior ao NRTL/UNIQUAC ajustados para a maioria dos sistemas comuns.</li>
-          <li>Implementação avançada - requer software de química quântica (ex.: Gaussian, ORCA, Turbomole).</li>
-          <li>Banco de sigma-profiles ainda limitado para compostos muito complexos ou incomuns.</li>
+          <li><strong>Custo Computacional Primário:</strong> Diferente de outros modelos onde basta "plugar" a molécula, para usar o COSMO-SAC em uma substância nova, é necessário rodar horas (ou dias) de cálculos de química quântica em softwares dedicados (como Gaussian ou Turbomole) apenas para obter o arquivo base da geometria otimizada.</li>
+          <li>A precisão na predição de LLE ou em misturas com associação química muito forte ainda está em aprimoramento contínuo, podendo ser inferior aos modelos ajustados empiricamente.</li>
+          <li>Requer um nível de conhecimento que cruza as fronteiras da termodinâmica de processos clássica com a modelagem molecular computacional.</li>
         </ul>`
     }
   }
