@@ -817,26 +817,36 @@ const MODELS_DETAIL = {
   },
   unifac_lle:{
     name:"UNIFAC-LLE", tag:"Modelo de gᴱ · Preditivo para LLE",
-    pill:"Parâmetros específicos para LLE",
+    pill:"Parâmetros calibrados para imiscibilidade",
     accent:"#5a7868",
     tabs:{
-      "Equações":`
-        <p class="section-label">Mesma estrutura do UNIFAC</p>
+      "Equações e Fundamentos":`
+        <p class="section-label">Idêntica Estrutura do UNIFAC Clássico</p>
         <div class="eq-block">ln <i>γ</i><sub>i</sub> = ln <i>γ</i><sub>i</sub><sup>C</sup> + ln <i>γ</i><sub>i</sub><sup>R</sup></div>
-        <p class="ref-note">Os parâmetros de interação a<sub>mn</sub> são diferentes dos do UNIFAC original - calibrados exclusivamente com dados de equilíbrio líquido-líquido.</p>`,
+        <p class="section-label">A Diferença Paramétrica</p>
+        <p class="prose">A matemática do modelo (divisão combinatória e residual) permanece inalterada. A diferença absoluta reside nos <strong>parâmetros de interação de grupo (<i>a<sub>mn</sub></i>)</strong>, utilizados no cálculo da contribuição residual (<i>γ<sub>i</sub><sup>R</sup></i>).</p>
+        <div class="highlight-box">
+          <strong><i>a</i><sub>mn</sub> (VLE) ≠ <i>a</i><sub>mn</sub> (LLE)</strong><br>
+          Os parâmetros do UNIFAC-LLE (Magnussen et al., 1981) formam uma matriz completamente independente, ajustada <em>exclusivamente</em> a partir de diagramas binodais e curvas de amarração experimentais de sistemas bifásicos líquidos.
+        </div>`,
       "Aplicação":`
+        <p class="prose">O UNIFAC-LLE é o modelo definitivo de triagem (screening) quando se necessita prever a imiscibilidade de compostos polares e <strong>não há nenhum dado de equilíbrio laboratorial disponível</strong>.</p>
         <ul class="dot-list">
-          <li>Projeto de extratores líquido-líquido sem dados experimentais disponíveis.</li>
-          <li>Estimativa de diagramas binodais e curvas de amarração em sistemas ternários.</li>
-          <li>Triagem de solventes para extração (ex.: purificação de princípios ativos farmacêuticos).</li>
+          <li><strong>Extração Líquido-Líquido:</strong> Seleção rápida de solventes (extratores) para processos de purificação na indústria química e farmacêutica.</li>
+          <li>Previsão de curvas binodais e linhas de amarração em sistemas ternários aquosos-orgânicos (ex: água + ácido acético + solvente).</li>
+          <li>Estimativa de coeficientes de partição (como o log <i>P</i> octanol/água) essenciais para avaliações ambientais e bioquímicas.</li>
         </ul>`,
       "Características":`
-        <p class="prose">O UNIFAC original foi calibrado com dados de VLE e tende a <strong>superestimar</strong> as regiões de imiscibilidade - prevendo LLE onde o sistema é na verdade miscível. O UNIFAC-LLE resolve isso usando um conjunto de parâmetros a<sub>mn</sub> re-ajustados exclusivamente a partir de dados de equilíbrio líquido-líquido, corrigindo tanto a posição quanto a forma das curvas binodais.</p>`,
-      "Limitações":`
-        <div class="highlight-box"><strong>Atenção crítica:</strong> os parâmetros do UNIFAC-LLE <em>não devem</em> ser usados para prever VLE - os resultados serão incorretos. Mantenha os dois conjuntos de parâmetros estritamente separados.</div>
         <ul class="dot-list">
-          <li>Herda a limitação de não distinguir isômeros estruturais.</li>
-          <li>Cobertura de grupos funcionais menor que o UNIFAC-VLE original.</li>
+          <li>Corrige o principal defeito do UNIFAC original, que, por ter sido ajustado para VLE, tende a superestimar severamente as regiões de imiscibilidade (frequentemente prevendo LLE em misturas totalmente homogêneas).</li>
+          <li>Ao empregar a matriz específica de LLE, a posição da curva binodal (o limite de solubilidade) e as inclinações das linhas de amarração se aproximam drasticamente do comportamento real.</li>
+        </ul>`,
+      "Limitações":`
+        <div class="highlight-box"><strong>Restrição Absoluta:</strong> Os parâmetros da matriz UNIFAC-LLE <em>jamais</em> devem ser utilizados para predizer Equilíbrios Líquido-Vapor (VLE) ou pressões de bolha, sob risco de predições fisicamente absurdas. As matrizes não são intercambiáveis.</div>
+        <ul class="dot-list">
+          <li><strong>Cobertura menor:</strong> A matriz de grupos funcionais do UNIFAC-LLE possui muito menos "lacunas preenchidas" do que a matriz do UNIFAC-VLE, visto que a base de dados mundial de LLE é muito menor.</li>
+          <li>Herda os defeitos da contribuição de grupos: incapacidade total de distinguir isômeros estruturais ou variações de ramificação de cadeia.</li>
+          <li>O modelo é estritamente preditivo. Se dados experimentais do par estiverem disponíveis, deve-se obrigatoriamente migrar para modelos correlativos ajustados (NRTL ou UNIQUAC).</li>
         </ul>`
     }
   },
