@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -378,17 +377,19 @@ header{
 /* ── Footer ── */
 footer{
   position:relative;z-index:1;
-  text-align:center;padding:2rem 1.5rem 2.5rem;
-  border-top:1px solid var(--line);margin-top:2rem;
+  text-align:left;padding:2.5rem 1.5rem 3rem;
+  border-top:1px solid var(--line);margin-top:3rem;
 }
 .footer-refs{
-  font-size:.72rem;color:var(--ink-soft);line-height:1.8;
-  max-width:640px;margin:0 auto;
+  font-size:.75rem;color:var(--ink-soft);line-height:1.8;
+  max-width:720px;margin:0 auto;
 }
-.footer-refs strong{font-weight:500;color:var(--ink);}
+.footer-refs strong{font-weight:600;color:var(--ink);display:block;margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.1em;font-size:0.7rem;}
+.ref-list { list-style: none; padding: 0; margin: 0; }
+.ref-list li { margin-bottom: 0.6rem; padding-left: 1.2rem; text-indent: -1.2rem; }
 .footer-sig{
-  font-family:'Amiri',serif;font-size:.95rem;font-style:italic;
-  color:var(--ink-soft);margin-top:1.1rem;
+  font-family:'Amiri',serif;font-size:1rem;font-style:italic;
+  color:var(--ink-soft);margin-top:2rem; text-align:center;
 }
 .footer-sig a{
   color:var(--ink-soft);text-decoration:none;
@@ -404,7 +405,6 @@ footer{
   .eq-block{font-size:1.1rem;}
   .question-text{font-size:1.4rem;}
   .model-circle{width:108px;height:108px;font-size:.92rem;}
-  
   
   .tab-nav {
     flex-wrap: wrap;
@@ -428,7 +428,7 @@ footer{
 <body>
 
 <header>
-  <p class="header-eyebrow">· Termodinâmica II · Eng. Química · </p>
+  <p class="header-eyebrow">· Termodinâmica II · Eng. Química ·</p>
   <h1 class="header-title">Seleção de Modelos</h1>
   <p class="header-sub">Guia interativo para escolha de modelos de equilíbrio de fases</p>
   <div class="header-ornament"><span></span>✦<span></span></div>
@@ -454,9 +454,14 @@ footer{
 
 <footer>
   <div class="footer-refs">
-    <strong>Referências</strong><br>
-    KORETSKY, M. D. (2016). Termodinâmica para Engenharia Química. lª ed.; Rio de Janeiro: LTC. &nbsp;·&nbsp;
-    SMITH, J. M.; VAN NESS, H.C.; ABBOTT, M.M. Introdução à Termodinâmica da Engenharia Química. 7ª ed.; Rio de Janeiro: LTC, 2013. &nbsp;·&nbsp;
+    <strong>Referências Bibliográficas</strong>
+    <ul class="ref-list">
+      <li>BONETTO, L. R. <strong>Termodinâmica II: Cap. 3 - Equilíbrio de fases (Modelos para gE e Seleção de Modelos)</strong>. Pelotas: Instituto Federal Sul-rio-grandense (IFSul), 2026. Notas de aula.</li>
+      <li>HOLDERBAUM, T.; GMEHLING, J. PSRK: A group contribution equation of state based on UNIFAC. <strong>Fluid Phase Equilibria</strong>, v. 70, n. 2-3, p. 251-265, 1991.</li>
+      <li>KORETSKY, M. D. <strong>Termodinâmica para Engenharia Química</strong>. 1. ed. Rio de Janeiro: LTC, 2007.</li>
+      <li>PRAUSNITZ, J. M.; LICHTENTHALER, R. N.; AZEVEDO, E. G. <strong>Molecular thermodynamics of fluid-phase equilibria</strong>. 3. ed. Upper Saddle River: Prentice Hall PTR, 1998.</li>
+      <li>SMITH, J. M.; VAN NESS, H. C.; ABBOTT, M. M. <strong>Introdução à Termodinâmica da Engenharia Química</strong>. 7. ed. Rio de Janeiro: LTC, 2013.</li>
+    </ul>
   </div>
   <p class="footer-sig">Elaborado por <a href="https://www.linkedin.com/in/taili-borges/" target="_blank">Taili Lucas</a> · 2026</p>
 </footer>
@@ -553,7 +558,7 @@ const RESULTS = {
     title:"Modelos sugeridos para pseudocomponentes",
     models:[
       {name:"CEoS Clássica (PR e SRK)", key:"ceos",         style:"ceos-style"},
-      {name:"CEoS + SCMR",            key:"scmr_pseudos", style:"ceos-style"}
+      {name:"CEoS + SCMR",             key:"scmr_pseudos", style:"ceos-style"}
     ]
   },
   end_psrk:{
@@ -630,15 +635,15 @@ const MODELS_DETAIL = {
         <div class="eq-block">ln <i>γ</i><sub>1</sub> = <i>x</i><sub>2</sub><sup>2</sup>[<i>A</i><sub>12</sub> + 2(<i>A</i><sub>21</sub>−<i>A</i><sub>12</sub>)<i>x</i><sub>1</sub>]<br><br>ln <i>γ</i><sub>2</sub> = <i>x</i><sub>1</sub><sup>2</sup>[<i>A</i><sub>21</sub> + 2(<i>A</i><sub>12</sub>−<i>A</i><sub>21</sub>)<i>x</i><sub>2</sub>]</div>
         <p class="ref-note">Caso simétrico (solução estritamente regular): A<sub>12</sub> = A<sub>21</sub> = A → g<sup>E</sup>/RT = Ax<sub>1</sub>x<sub>2</sub></p>`,
       "Aplicação":`
-        <p class="prose">Margules é a escolha natural quando se busca <strong>correlação rápida</strong> para sistemas simples — moléculas de tamanho, forma e natureza química semelhantes com desvios moderados da idealidade.</p>
+        <p class="prose">Margules é a escolha natural quando se busca <strong>correlação rápida</strong> para sistemas simples - moléculas de tamanho, forma e natureza química semelhantes com desvios moderados da idealidade.</p>
         <p class="subsection">Sistemas indicados</p>
         <ul class="dot-list">
-          <li><strong>Hidrocarbonetos de estrutura próxima:</strong> benzeno + tolueno, n-hexano + n-heptano — desvios pequenos, 1 ou 2 parâmetros suficientes.</li>
-          <li><strong>Estimativa de γ<sub>i</sub><sup>∞</sup>:</strong> ln γ<sub>1</sub><sup>∞</sup> = A<sub>12</sub> e ln γ<sub>2</sub><sup>∞</sup> = A<sub>21</sub> — dois pontos de diluição infinita determinam o modelo completo.</li>
+          <li><strong>Hidrocarbonetos de estrutura próxima:</strong> benzeno + tolueno, n-hexano + n-heptano - desvios pequenos, 1 ou 2 parâmetros suficientes.</li>
+          <li><strong>Estimativa de γ<sub>i</sub><sup>∞</sup>:</strong> ln γ<sub>1</sub><sup>∞</sup> = A<sub>12</sub> e ln γ<sub>2</sub><sup>∞</sup> = A<sub>21</sub> - dois pontos de diluição infinita determinam o modelo completo.</li>
           <li>Triagem rápida de azeótropos e ponto de partida analítico em simuladores.</li>
         </ul>`,
       "Características":`
-        <p class="prose">Margules não deriva de nenhuma teoria molecular — é o <strong>truncamento de uma expansão empírica de Redlich-Kister</strong> em potências de (x<sub>1</sub> − x<sub>2</sub>). A forma de 2 parâmetros retém apenas os dois primeiros termos, satisfazendo automaticamente as condições de contorno (g<sup>E</sup> = 0 para os puros) e a restrição termodinâmica de Gibbs-Duhem.</p>
+        <p class="prose">Margules não deriva de nenhuma teoria molecular - é o <strong>truncamento de uma expansão empírica de Redlich-Kister</strong> em potências de (x<sub>1</sub> − x<sub>2</sub>). A forma de 2 parâmetros retém apenas os dois primeiros termos, satisfazendo automaticamente as condições de contorno (g<sup>E</sup> = 0 para os puros) e a restrição termodinâmica de Gibbs-Duhem.</p>
         <ul class="dot-list">
           <li>Parâmetros ajustados empiricamente por regressão linear/não-linear de dados P-x-y ou T-x-y.</li>
           <li>A dependência com a temperatura não está inclusa na equação: A<sub>ij</sub>(T) deve ser medida e ajustada experimentalmente para cada T.</li>
@@ -661,9 +666,9 @@ const MODELS_DETAIL = {
         <div class="eq-block"><i>g</i><sup>E</sup>/RT = (<i>A</i><sub>12</sub><i>A</i><sub>21</sub><i>x</i><sub>1</sub><i>x</i><sub>2</sub>)/(<i>A</i><sub>12</sub><i>x</i><sub>1</sub> + <i>A</i><sub>21</sub><i>x</i><sub>2</sub>)</div>
         <p class="section-label">Coeficientes de atividade</p>
         <div class="eq-block">ln <i>γ</i><sub>1</sub> = <i>A</i><sub>12</sub>/[1 + (<i>A</i><sub>12</sub><i>x</i><sub>1</sub>)/(<i>A</i><sub>21</sub><i>x</i><sub>2</sub>)]<sup>2</sup><br><br>ln <i>γ</i><sub>2</sub> = <i>A</i><sub>21</sub>/[1 + (<i>A</i><sub>21</sub><i>x</i><sub>2</sub>)/(<i>A</i><sub>12</sub><i>x</i><sub>1</sub>)]<sup>2</sup></div>
-        <p class="ref-note">A<sub>12</sub> = ln γ<sub>1</sub><sup>∞</sup> e A<sub>21</sub> = ln γ<sub>2</sub><sup>∞</sup> — os parâmetros representam matematicamente os coeficientes de atividade em diluição infinita.</p>`,
+        <p class="ref-note">A<sub>12</sub> = ln γ<sub>1</sub><sup>∞</sup> e A<sub>21</sub> = ln γ<sub>2</sub><sup>∞</sup> - os parâmetros representam matematicamente os coeficientes de atividade em diluição infinita.</p>`,
       "Aplicação":`
-        <p class="prose">A equação de van Laar é altamente recomendada para sistemas que apresentam <strong>assimetria pronunciada</strong> entre os componentes — como moléculas de tamanhos diferentes ou pressões de vapor muito distantes.</p>
+        <p class="prose">A equação de van Laar é altamente recomendada para sistemas que apresentam <strong>assimetria pronunciada</strong> entre os componentes - como moléculas de tamanhos diferentes ou pressões de vapor muito distantes.</p>
         <ul class="dot-list">
           <li>Sistemas com desvios positivos consistentes da Lei de Raoult.</li>
           <li>Parametrização extremamente rápida a partir de dois pontos de diluição infinita (frequentemente obtidos por cromatografia gasosa).</li>
@@ -681,7 +686,7 @@ const MODELS_DETAIL = {
   },
   wilson:{
     name:"Wilson", tag:"Modelo de gᴱ · Composição local",
-    pill:"Composição Local · 2 parâmetros",
+    pill:"Padrão-ouro para VLE Polar",
     accent:"#3d7a5a",
     tabs:{
       "Equações e Fundamentos":`
@@ -718,7 +723,7 @@ const MODELS_DETAIL = {
     tabs:{
       "Equações e Fundamentos":`
         <p class="section-label">Energia de Gibbs em excesso (Mistura Binária)</p>
-        <div class="eq-block"><i>g</i><sup>E</sup>/RT = <i>x</i><sub>1</sub><i>x</i><sub>2</sub> [ (<i>τ</i><sub>21</sub><i>G</i><sub>21</sub> / (<i>x</i><sub>1</sub> + <i>x</i><sub>2</sub><i>G</i><sub>21</sub>)) + (<i><i>τ</i></i><sub>12</sub><i>G</i><sub>12</sub> / (<i>x</i><sub>2</sub> + <i>x</i><sub>1</sub><i>G</i><sub>12</sub>)) ]</div>
+        <div class="eq-block"><i>g</i><sup>E</sup>/RT = <i>x</i><sub>1</sub><i>x</i><sub>2</sub> [ (<i>τ</i><sub>21</sub><i>G</i><sub>21</sub> / (<i>x</i><sub>1</sub> + <i>x</i><sub>2</sub><i>G</i><sub>21</sub>)) + (<i>τ</i><sub>12</sub><i>G</i><sub>12</sub> / (<i>x</i><sub>2</sub> + <i>x</i><sub>1</sub><i>G</i><sub>12</sub>)) ]</div>
         <p class="section-label">Coeficientes de atividade (Binários)</p>
         <div class="eq-block" style="font-size: 1.15rem;">
           ln <i>γ</i><sub>1</sub> = <i>x</i><sub>2</sub><sup>2</sup> [ <i>τ</i><sub>21</sub> (<i>G</i><sub>21</sub> / (<i>x</i><sub>1</sub> + <i>x</i><sub>2</sub><i>G</i><sub>21</sub>))<sup>2</sup> + (<i>τ</i><sub>12</sub><i>G</i><sub>12</sub> / (<i>x</i><sub>2</sub> + <i>x</i><sub>1</sub><i>G</i><sub>12</sub>)<sup>2</sup>) ]<br><br>
@@ -849,7 +854,7 @@ const MODELS_DETAIL = {
     pill:"Pseudocomponentes · Frações de Petróleo",
     accent:"#4a5a6a",
     tabs:{
-      "Conceito":`
+      "Equações e Fundamentos":`
         <p class="section-label">Self-Consistent Mixing Rule (SCMR)</p>
         <p class="prose">A SCMR (Staudt & Soares, 2012) é uma regra de mistura que integra modelos de energia livre de Gibbs em excesso (<i>g</i><sup>E</sup>) ao parâmetro atrativo (<i>a</i>) de Equações de Estado Cúbicas. Sua grande inovação matemática é ser "autoconsistente" — em baixas pressões, ela garante a reprodução exata do comportamento do modelo de <i>g</i><sup>E</sup> original, superando as inconsistências das regras antigas como MHV1 e Wong-Sandler.</p>
         <p class="section-label">Acoplamento com modelos preditivos</p>
@@ -878,7 +883,7 @@ const MODELS_DETAIL = {
     pill:"Sistemas Apolares · Ampla Faixa de P e T",
     accent:"#4a5a6a",
     tabs:{
-      "Equações":`
+      "Equações e Fundamentos":`
         <p class="section-label">Forma Cúbica Genérica</p>
         <div class="eq-block"><i>P</i> = <i>RT</i>/(<i>v</i>−<i>b</i>) − <i>a</i>(T)/[<i>v</i><sup>2</sup> + <i>ubv</i> + <i>wb</i><sup>2</sup>]</div>
         
@@ -955,7 +960,7 @@ const MODELS_DETAIL = {
     pill:"Predictive Soave-Redlich-Kwong",
     accent:"#4a5a6a",
     tabs:{
-      "Conceito e Equações":`
+      "Equações e Fundamentos":`
         <p class="prose">O modelo PSRK (Predictive Soave-Redlich-Kwong) é uma equação de estado de contribuição de grupos baseada na equação de Soave-Redlich-Kwong (SRK). Ele utiliza o método UNIFAC para calcular o parâmetro de mistura <i>a</i>, empregando a regra de mistura de primeira ordem MHV1 (Modified Huron-Vidal) proposta por Michelsen.</p>
         <p class="section-label">Equação SRK de base</p>
         <div class="eq-block"><i>P</i> = <i>RT</i>/(<i>v</i>−<i>b</i>) − <i>a</i>/[<i>v</i>(<i>v</i>+<i>b</i>)]</div>
@@ -991,7 +996,7 @@ const MODELS_DETAIL = {
     pill:"Solubilidade de gases · Alta pressão",
     accent:"#4a5a6a",
     tabs:{
-      "Equações":`
+      "Equações e Fundamentos":`
         <p class="section-label">Equilíbrio em diluição infinita (Baixa Pressão)</p>
         <div class="eq-block"><i>y</i><sub>i</sub> <i>P</i> = <i>x</i><sub>i</sub> <i>H</i><sub>i,solvente</sub>(T)</div>
         <p class="section-label">Forma Estendida (Alta Pressão)</p>
@@ -1243,7 +1248,7 @@ function toggleHint(nodeId, btn) {
 window.addEventListener('DOMContentLoaded', initTree);
 
 /* ═══════════════════════════════════════════
-   PAINEL LATERAL
+   PAINÉIS LATERAIS
 ═══════════════════════════════════════════ */
 const panel   = document.getElementById('detail-panel');
 const backdrop= document.getElementById('panel-backdrop');
